@@ -14,7 +14,6 @@ rodar no git bash: ./run.sh
 http://localhost:5000
 cliente123
 admin@dressandgo.com.br / admin123
-estoque@dressandgo.com.br / estoque123
 cliente@dressandgo.com.br / cliente123
 
 
