@@ -15,6 +15,6 @@ http://localhost:5000
 cliente123
 admin@dressandgo.com.br / admin123
 cliente@dressandgo.com.br / cliente123
-
+estoque@dressandgo.com.br / estoque123
 
 O banco de dados tá em /bin/debug/net9.0/
