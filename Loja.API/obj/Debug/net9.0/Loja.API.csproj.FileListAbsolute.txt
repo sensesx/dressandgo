@@ -1,0 +1,143 @@
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\appsettings.json
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.staticwebassets.runtime.json
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.staticwebassets.endpoints.json
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.deps.json
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.runtimeconfig.json
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\Loja.API.pdb
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.core.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.provider.e_sqlite3.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\browser-wasm\nativeassets\net9.0\e_sqlite3.a
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-arm\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-arm64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-s390x\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-ppc64le\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-s390x\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\maccatalyst-arm64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\maccatalyst-x64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\osx-arm64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build\Loja.API\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.csproj.AssemblyReference.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.AssemblyInfoInputs.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.AssemblyInfo.cs
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.csproj.CoreCompileInputs.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\scopedcss\bundle\Loja.API.styles.css
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\w27ahwa2br-{0}-fofv4juen6-fofv4juen6.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\tsjhsojmye-{0}-jrhawyenyw-jrhawyenyw.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\xujcolzj0w-{0}-i3fo8iiqa9-i3fo8iiqa9.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\blei0op04c-{0}-eklprblmcj-eklprblmcj.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\khbjnt71oe-{0}-t4cvynpsrv-t4cvynpsrv.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\wcoly0qrkl-{0}-7xaeccmlz3-7xaeccmlz3.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\wbpssapkdm-{0}-vhu5guhkfe-vhu5guhkfe.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\12aq9aso6f-{0}-hwedfdomtn-hwedfdomtn.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\83jihegsoz-{0}-qlon7oiaw8-qlon7oiaw8.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\bvf2aoqjup-{0}-hv0qbx4dqn-hv0qbx4dqn.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\z33bon6706-{0}-5bsdmliesn-5bsdmliesn.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\8qn91qtok5-{0}-oou375isaz-oou375isaz.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\8svg3mbuvo-{0}-3u9tgvw9p8-3u9tgvw9p8.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\0e3pzzffn8-{0}-dyp9dm283z-dyp9dm283z.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\waxrvvxb7l-{0}-yetrrjczey-yetrrjczey.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\2k0t480mez-{0}-8ucbiivocn-8ucbiivocn.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\wap0cc8i5k-{0}-b2jkznzqas-b2jkznzqas.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\00cywaiz99-{0}-iv8h3y1r8i-iv8h3y1r8i.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\wd8lwby98g-{0}-rnbejo8gyu-rnbejo8gyu.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\lx7e1xv48t-{0}-6g34agwj3a-6g34agwj3a.gz
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\staticwebassets.build.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\staticwebassets.build.json.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\staticwebassets.development.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\swae.build.ex.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.csproj.Up2Date
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.dll
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\refint\Loja.API.dll
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.pdb
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\Loja.API.genruntimeconfig.cache
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\ref\Loja.API.dll
+C:\Users\morph\Downloads\build\Loja.API\obj\Debug\net9.0\compressed\hpd9g7sd9p-{0}-52urh0bv7e-52urh0bv7e.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\appsettings.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.staticwebassets.runtime.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.staticwebassets.endpoints.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.deps.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.runtimeconfig.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\Loja.API.pdb
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.batteries_v2.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.core.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\SQLitePCLRaw.provider.e_sqlite3.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\browser-wasm\nativeassets\net9.0\e_sqlite3.a
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-arm\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-arm64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-armel\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-mips64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-arm\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-arm64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-s390x\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-musl-x64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-ppc64le\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-s390x\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-x64\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\linux-x86\native\libe_sqlite3.so
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\maccatalyst-arm64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\maccatalyst-x64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\osx-arm64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\osx-x64\native\libe_sqlite3.dylib
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\win-arm\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\win-arm64\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\win-x64\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\bin\Debug\net9.0\runtimes\win-x86\native\e_sqlite3.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.csproj.AssemblyReference.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.AssemblyInfoInputs.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.AssemblyInfo.cs
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.csproj.CoreCompileInputs.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\rjimswa.dswa.cache.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\scopedcss\bundle\Loja.API.styles.css
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\w27ahwa2br-{0}-fofv4juen6-fofv4juen6.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\tsjhsojmye-{0}-jrhawyenyw-jrhawyenyw.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\xujcolzj0w-{0}-i3fo8iiqa9-i3fo8iiqa9.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\12aq9aso6f-{0}-hwedfdomtn-hwedfdomtn.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\z33bon6706-{0}-5bsdmliesn-5bsdmliesn.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\wap0cc8i5k-{0}-b2jkznzqas-b2jkznzqas.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\wd8lwby98g-{0}-rnbejo8gyu-rnbejo8gyu.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\staticwebassets.build.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\staticwebassets.build.json.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\staticwebassets.development.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\staticwebassets.build.endpoints.json
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\swae.build.ex.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.csproj.Up2Date
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\refint\Loja.API.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.pdb
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\Loja.API.genruntimeconfig.cache
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\ref\Loja.API.dll
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\00cywaiz99-{0}-0x017pb9up-0x017pb9up.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\wcoly0qrkl-{0}-d7b3a5qa0v-d7b3a5qa0v.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\wbpssapkdm-{0}-smjdgorh15-smjdgorh15.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\83jihegsoz-{0}-j6gfr5h13n-j6gfr5h13n.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\8qn91qtok5-{0}-ntzv1im4w6-ntzv1im4w6.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\hpd9g7sd9p-{0}-2637h0oftg-2637h0oftg.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\waxrvvxb7l-{0}-dyuvpa4nc6-dyuvpa4nc6.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\lx7e1xv48t-{0}-f3cnlc51i5-f3cnlc51i5.gz
+C:\Users\morph\Downloads\build - Copia\Loja.API\obj\Debug\net9.0\compressed\blei0op04c-{0}-lxlz9ed4t6-lxlz9ed4t6.gz

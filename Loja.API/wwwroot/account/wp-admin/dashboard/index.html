@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRESS &amp; GO — Dashboard</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/loja.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary px-3">
+  <a class="navbar-brand fw-bold" href="/">DRESS<em class="text-primary">&</em>GO</a>
+  <div class="d-flex align-items-center gap-2">
+    <span id="nav-nome" class="text-warning small fw-bold"></span>
+    <a href="/" class="btn btn-outline-secondary btn-sm">← Loja</a>
+    <button class="btn btn-outline-danger btn-sm" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="container-fluid py-4">
+  <h2 class="fw-bold mb-4">PAINEL ADMINISTRATIVO</h2>
+
+  <ul class="nav nav-tabs border-secondary mb-4" id="adminTabs">
+    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-func" onclick="carregarFunc()">Funcionários</button></li>
+    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-cli" onclick="carregarCli()">Clientes</button></li>
+  </ul>
+
+  <div class="tab-content">
+    <div class="tab-pane fade show active" id="tab-func">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold mb-0">Funcionários</h5>
+        <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#formFunc">+ Novo funcionário</button>
+      </div>
+
+      <div class="collapse mb-4" id="formFunc">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3 text-primary">Cadastro de Funcionário</h6>
+            <div class="row g-3">
+              <div class="col-md-4"><label class="form-label">Nome *</label><input type="text" id="fn" class="form-control" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">CPF *</label><input type="text" id="fcpf" class="form-control" placeholder="000.000.000-00" maxlength="14" oninput="mskCpf(this)" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">Telefone *</label><input type="text" id="ftel" class="form-control" placeholder="(11) 99999-9999" maxlength="15" oninput="mskTel(this)" autocomplete="off"></div>
+              <div class="col-md-5"><label class="form-label">E-mail *</label><input type="text" id="fe" class="form-control" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">Senha *</label><input type="password" id="fp" class="form-control" autocomplete="off"></div>
+              <div class="col-md-3"><label class="form-label">Perfil</label><select id="fr" class="form-select"><option value="stockist">Estoquista</option><option value="manager">Gerente</option></select></div>
+              <div class="col-12"><hr class="border-secondary"><h6 class="fw-bold mb-0">Endereço</h6></div>
+              <div class="col-md-3"><label class="form-label">CEP *</label><input type="text" id="fcep" class="form-control" placeholder="00000-000" maxlength="9" oninput="mskCep(this)" autocomplete="off"></div>
+              <div class="col-md-6"><label class="form-label">Rua *</label><input type="text" id="frua" class="form-control" autocomplete="off"></div>
+              <div class="col-md-3"><label class="form-label">Número *</label><input type="text" id="fnum" class="form-control" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">Complemento</label><input type="text" id="fcomp" class="form-control" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">Bairro *</label><input type="text" id="fbairro" class="form-control" autocomplete="off"></div>
+              <div class="col-md-4"><label class="form-label">Cidade *</label><input type="text" id="fcidade" class="form-control" autocomplete="off"></div>
+              <div class="col-md-2"><label class="form-label">Estado *</label><input type="text" id="festado" class="form-control" maxlength="2" autocomplete="off"></div>
+              <div class="col-12">
+                <div id="msg-func" class="small mb-2" style="display:none"></div>
+                <button class="btn btn-primary" onclick="criarFunc()">Salvar funcionário</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tbl-func"><p class="text-secondary small">Carregando...</p></div>
+    </div>
+
+    <div class="tab-pane fade" id="tab-cli">
+      <h5 class="fw-bold mb-3">Clientes</h5>
+      <div id="tbl-cli"><p class="text-secondary small">Carregando...</p></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const token = sessionStorage.getItem('dg_token');
+const role  = sessionStorage.getItem('dg_role');
+if (!token || role !== 'manager') location.href = '/account/wp-admin/';
+
+window.addEventListener('load', () => {
+  document.getElementById('nav-nome').textContent = (sessionStorage.getItem('dg_name')||'').toUpperCase();
+  carregarFunc();
+});
+
+async function api(method, path, body) {
+  const r = await fetch(path,{method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:body?JSON.stringify(body):undefined});
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.erro||d.error||'Erro '+r.status);
+  return d;
+}
+
+function mskCpf(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>9)v=v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');else if(v.length>6)v=v.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1.$2.$3');else if(v.length>3)v=v.replace(/(\d{3})(\d{0,3})/,'$1.$2');el.value=v;}
+function mskTel(el){let v=el.value.replace(/\D/g,'').slice(0,11);if(v.length>6)v=v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');else if(v.length>2)v=v.replace(/(\d{2})(\d{0,5})/,'($1) $2');el.value=v;}
+function mskCep(el){
+  let v=el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5)v=v.replace(/(\d{5})(\d{0,3})/,'$1-$2');
+  el.value=v;
+  if(v.replace('-','').length===8) viaCep(v.replace('-',''));
+}
+async function viaCep(cep){
+  try{const d=await fetch('https://viacep.com.br/ws/'+cep+'/json/').then(r=>r.json());if(d.erro)return;
+    const s=(id,v)=>{const e=document.getElementById(id);if(e&&v&&!e.value)e.value=v;};
+    s('frua',d.logradouro);s('fbairro',d.bairro);s('fcidade',d.localidade);s('festado',d.uf);
+    document.getElementById('fnum').focus();}catch{}
+}
+
+async function carregarFunc() {
+  const el = document.getElementById('tbl-func');
+  try {
+    const todos = await api('GET','/users');
+    const lista = todos.filter(u => ['manager','stockist'].includes(u.perfil||u.role));
+    el.innerHTML = lista.length ? tabela(lista) : '<p class="text-secondary small">Nenhum funcionário.</p>';
+  } catch(e) { el.innerHTML = '<p class="text-danger small">'+e.message+'</p>'; }
+}
+
+async function carregarCli() {
+  const el = document.getElementById('tbl-cli');
+  if (el.dataset.loaded) return;
+  try {
+    const todos = await api('GET','/users');
+    const lista = todos.filter(u => (u.perfil||u.role)==='customer');
+    el.innerHTML = lista.length ? tabela(lista) : '<p class="text-secondary small">Nenhum cliente.</p>';
+    el.dataset.loaded = '1';
+  } catch(e) { el.innerHTML = '<p class="text-danger small">'+e.message+'</p>'; }
+}
+
+function tabela(lista) {
+  const bc = {manager:'warning',stockist:'info',customer:'success'};
+  const bl = {manager:'Gerente',stockist:'Estoquista',customer:'Cliente'};
+  return '<div class="table-responsive"><table class="table table-sm align-middle">'
+    +'<thead><tr><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Telefone</th><th></th></tr></thead><tbody>'
+    + lista.map(u => {
+      const p = u.perfil||u.role;
+      const n = u.nome||u.name||'—';
+      const isOwner = u.id===1 && p==='manager';
+      return '<tr><td class="fw-semibold small">'+n+(isOwner?' <span class="text-warning" style="font-size:.7rem">(proprietário)</span>':'')+' </td>'
+        +'<td class="text-secondary" style="font-size:.75rem">'+( u.email||'—')+'</td>'
+        +'<td><span class="text-'+bc[p]+' small">'+bl[p]+'</span></td>'
+        +'<td class="text-secondary" style="font-size:.75rem">'+(u.telefone||u.phone||'—')+'</td>'
+        +'<td class="text-end">'+(isOwner?'':'<button class="btn btn-link btn-sm p-0 text-danger" onclick="desativar('+u.id+',\''+n+'\')" style="font-size:.75rem">remover</button>')+'</td></tr>';
+    }).join('')
+    +'</tbody></table></div>';
+}
+
+async function criarFunc() {
+  const nome=document.getElementById('fn').value.trim();
+  const cpf=document.getElementById('fcpf').value.replace(/\D/g,'');
+  const tel=document.getElementById('ftel').value.replace(/\D/g,'');
+  const email=document.getElementById('fe').value.trim();
+  const senha=document.getElementById('fp').value;
+  const perfil=document.getElementById('fr').value;
+  const cep=document.getElementById('fcep').value.replace(/\D/g,'');
+  const rua=document.getElementById('frua').value.trim();
+  const num=document.getElementById('fnum').value.trim();
+  const bairro=document.getElementById('fbairro').value.trim();
+  const cidade=document.getElementById('fcidade').value.trim();
+  const estado=document.getElementById('festado').value.trim().toUpperCase();
+  const msg=document.getElementById('msg-func');
+  msg.style.display='none';
+
+  const e=(m)=>{msg.textContent=m;msg.className='small text-danger mb-2';msg.style.display='block';};
+  if(!nome) return e('Nome obrigatório.');
+  if(cpf.length!==11) return e('CPF inválido.');
+  if(tel.length<10) return e('Telefone inválido.');
+  if(!email.includes('@')) return e('E-mail inválido.');
+  if(senha.length<6) return e('Senha: mínimo 6 caracteres.');
+  if(cep.length!==8) return e('CEP inválido.');
+  if(!rua) return e('Rua obrigatória.');
+  if(!cidade) return e('Cidade obrigatória.');
+
+  try {
+    const d = await api('POST','/users',{name:nome,email,password:senha,role:perfil,phone:tel,cpf});
+    if(d.id) try{await api('POST','/users/'+d.id+'/addresses',{label:'Endereço',cep,street:rua,number:num||'s/n',complement:document.getElementById('fcomp').value.trim()||null,district:bairro,city:cidade,state:estado||'SP'});}catch{}
+    msg.textContent='Funcionário cadastrado.';msg.className='small text-success mb-2';msg.style.display='block';
+    setTimeout(()=>{bootstrap.Collapse.getInstance(document.getElementById('formFunc'))?.hide();carregarFunc();},1500);
+  } catch(ex){e(ex.message);}
+}
+
+async function desativar(id, nome) {
+  if(!confirm('Remover '+nome+'?')) return;
+  try { await api('PATCH','/users/'+id,{active:false}); carregarFunc(); carregarCli(); }
+  catch(e) { alert(e.message); }
+}
+
+function sair(){['dg_token','dg_role','dg_name','dg_uid','dg_cart'].forEach(k=>sessionStorage.removeItem(k));location.href='/';}
+</script>
+</body>
+</html>

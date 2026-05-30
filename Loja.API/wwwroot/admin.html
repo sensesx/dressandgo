@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClothingStore — Painel Administrativo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+      --bg: #0e0e0e;
+  --bg2: #161616;  
+  --bg3: #1e1e1e;
+    --border: #2a2a2a;
+  --border2: #333;
+  --amber: #f59e0b;
+  --amber2: #fbbf24;
+  --amber-dim: rgba(245,158,11,0.12);
+   --red: #ef4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.12);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59,130,246,0.12);
+  --text: #e8e8e8;
+  --text2: #999;
+  --text3: #555;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+   background: var(--bg);
+  color: var(--text);
+      font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+    display: flex;
+  flex-direction: column;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+
+  background: repeating-linear-gradient(
+    0deg,
+       transparent,
+    transparent 2px,
+     rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+     z-index: 9999;
+}
+
+#login-screen {
+  position: fixed;
+  inset: 0;
+     background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn .3s ease;
+}
+.login-box {
+  width: 400px;
+  border: 1px solid var(--border2);
+  background: var(--bg2);
+     padding: 48px 40px;
+  position: relative;
+}
+.login-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+     background: linear-gradient(90deg, var(--amber), transparent);
+
+}
+.login-logo {  
+  font-family: var(--font-display);
+  font-size: 28px;  
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+.login-sub {
+  font-size: 11px;
+  font-family: var(--font-mono);  
+  color: var(--amber);
+  letter-spacing: 0.15em;  
+  text-transform: uppercase;
+  margin-bottom: 36px;
+}
+.field-group { margin-bottom: 16px; }
+.field-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;  
+  text-transform: uppercase;
+  color: var(--text2);  
+    margin-bottom: 6px;
+}
+.field-input {  
+  width: 100%;
+   background: var(--bg3);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  font-family: var(--font-mono);
+      font-size: 13px;
+     padding: 10px 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.field-input:focus { border-color: var(--amber); }
+.btn-primary {
+  width: 100%;
+  background: var(--amber);
+  color: #000;
+  border: none;
+    font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;  
+  letter-spacing: 0.1em;
+     text-transform: uppercase;
+    padding: 12px;
+  cursor: pointer;  
+  transition: background .15s, transform .1s;
+  margin-top: 8px;  
+}
+.btn-primary:hover { background: var(--amber2); }
+.btn-primary:active { transform: scale(0.99); }
+.login-error {
+  color: var(--red);
+  font-family: var(--font-mono);
+      font-size: 11px;
+  margin-top: 12px;
+  display: none;
+}
+.login-hint {
+  margin-top: 24px;  
+  padding-top: 20px;
+     border-top: 1px solid var(--border);
+}
+.login-hint p {
+
+  font-family: var(--font-mono);
+
+  font-size: 10px;
+    color: var(--text3);
+  line-height: 1.8;
+}
+.login-hint strong { color: var(--text2); }
+
+#app { display: none; flex: 1; flex-direction: column; }
+#app.visible { display: flex; }
+
+header {
+  background: var(--bg2);
+     border-bottom: 1px solid var(--border);
+     padding: 0 24px;
+
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+     flex-shrink: 0;
+}
+.header-logo {
+   font-family: var(--font-display);
+  font-size: 20px;
+     font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+}
+
+.header-logo span { color: var(--amber); }
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.header-user {
+  display: flex;
+  align-items: center;  
+     gap: 8px;
+}
+.user-badge {
+  font-family: var(--font-mono);  
+   font-size: 10px;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid var(--amber);
+  color: var(--amber);  
+
+}
+
+.header-name {
+  font-size: 13px;  
+  color: var(--text2);
+}
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--border2);  
+  color: var(--text2);
+  font-family: var(--font-mono);
+  font-size: 10px;  
+  letter-spacing: 0.1em;
+  text-transform: uppercase;  
+    padding: 5px 12px;
+  cursor: pointer;  
+  transition: border-color .2s, color .2s;
+}
+.btn-logout:hover { border-color: var(--red); color: var(--red); }
+
+.main-wrap {  
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+nav {
+  width: 200px;  
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+     padding: 20px 0;
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+.nav-section {
+
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+      text-transform: uppercase;
+  color: var(--text3);
+  padding: 0 16px;
+  margin: 16px 0 6px;
+}
+.nav-item {
+  display: flex;
+   align-items: center;
+     gap: 10px;
+  padding: 9px 16px;
+    cursor: pointer;
+  color: var(--text2);
+  font-size: 13px;
+  font-weight: 500;
+  transition: color .15s, background .15s;
+  border-left: 2px solid transparent;
+  user-select: none;
+}
+.nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+.nav-item.active { color: var(--amber); border-left-color: var(--amber); background: var(--amber-dim); }
+.nav-icon { width: 16px; text-align: center; font-size: 14px; }
+
+main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 32px;
+  background: var(--bg);  
+}
+.page { display: none; animation: fadeIn .2s ease; }
+.page.active { display: block; }
+
+.page-header {
+  display: flex;  
+  align-items: flex-end;  
+  justify-content: space-between;  
+  margin-bottom: 28px;
+      padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);  
+}
+.page-title {
+  font-family: var(--font-display);
+   font-size: 32px;
+  font-weight: 700;
+   letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.page-title small {  
+  display: block;
+   font-family: var(--font-mono);
+  font-size: 10px;
+      font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  margin-bottom: 4px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.stat-card {  
+  background: var(--bg2);
+  border: 1px solid var(--border);  
+  padding: 16px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--amber), transparent);  
+}
+.stat-label {  
+  font-family: var(--font-mono);  
+  font-size: 9px;
+   letter-spacing: 0.15em;
+  text-transform: uppercase;
+      color: var(--text3);
+  margin-bottom: 8px;
+}
+.stat-value {
+  font-family: var(--font-display);  
+  font-size: 30px;  
+  font-weight: 700;
+  color: var(--amber);
+  line-height: 1;
+}
+.stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+.table-wrap {  
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.table-toolbar {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);  
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-input {
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+     color: var(--text);
+      font-family: var(--font-mono);
+  font-size: 12px;  
+     padding: 7px 12px;
+  outline: none;  
+  width: 240px;
+  transition: border-color .2s;
+}
+.search-input:focus { border-color: var(--amber); }
+.select-filter {
+  background: var(--bg3);
+    border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: var(--font-mono);
+      font-size: 11px;
+
+  padding: 7px 10px;
+
+  outline: none;
+  cursor: pointer;
+}
+.btn-add {
+  margin-left: auto;  
+  background: var(--amber);
+  color: #000;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+    text-transform: uppercase;
+  padding: 8px 16px;  
+    cursor: pointer;
+  transition: background .15s;
+}
+.btn-add:hover { background: var(--amber2); }
+table { width: 100%; border-collapse: collapse; }
+thead tr {
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border2);  
+}
+th {
+
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+   padding: 10px 14px;
+  text-align: left;
+  font-weight: 400;
+}
+td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);  
+  color: var(--text2);
+   font-size: 13px;
+}
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+.td-mono { font-family: var(--font-mono); font-size: 11px; }
+.td-name { color: var(--text); font-weight: 500; }
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border: 1px solid;
+}
+.badge-amber { color: var(--amber); border-color: var(--amber); background: var(--amber-dim); }
+.badge-green { color: var(--green); border-color: var(--green); background: var(--green-dim); }
+.badge-red { color: var(--red); border-color: var(--red); background: var(--red-dim); }
+.badge-blue { color: var(--blue); border-color: var(--blue); background: var(--blue-dim); }
+.badge-gray { color: var(--text3); border-color: var(--border2); }
+
+.btn-action {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text3);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  cursor: pointer;
+    transition: all .15s;
+  letter-spacing: 0.05em;
+}
+.btn-action:hover { border-color: var(--amber); color: var(--amber); }
+.btn-action.danger:hover { border-color: var(--red); color: var(--red); }
+.btn-action.success:hover { border-color: var(--green); color: var(--green); }  
+
+.modal-overlay {  
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  display: none;
+}
+.modal-overlay.open { display: flex; animation: fadeIn .15s ease; }
+.modal {
+   background: var(--bg2);
+  border: 1px solid var(--border2);
+  width: 520px;  
+    max-height: 85vh;
+    overflow-y: auto;
+  position: relative;
+}
+.modal::before {  
+  content: '';
+  position: absolute;
+
+  top: 0; left: 0; right: 0;
+
+  height: 2px;
+  background: linear-gradient(90deg, var(--amber), transparent);
+}
+.modal-header {
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+   justify-content: space-between;
+}
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;  
+}
+.modal-close {
+  background: none;
+     border: none;
+  color: var(--text3);
+  cursor: pointer;
+    font-size: 20px;
+  line-height: 1;
+  padding: 4px;
+  transition: color .15s;
+}
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 24px 28px; }
+.modal-footer {
+  padding: 16px 28px 24px;
+  display: flex;
+   justify-content: flex-end;
+  gap: 10px;
+}
+.btn-cancel {  
+    background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  font-family: var(--font-display);  
+  font-size: 13px;
+   font-weight: 600;
+  letter-spacing: 0.08em;  
+  text-transform: uppercase;
+  padding: 9px 20px;  
+   cursor: pointer;
+     transition: all .15s;
+}
+.btn-cancel:hover { border-color: var(--text2); color: var(--text); }
+.btn-save {
+  background: var(--amber);
+  color: #000;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 9px 24px;
+    cursor: pointer;
+  transition: background .15s;
+}
+.btn-save:hover { background: var(--amber2); }  
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-row.single { grid-template-columns: 1fr; }
+
+#toast {
+  position: fixed;
+
+  bottom: 24px;
+  right: 24px;
+   background: var(--bg3);
+    border: 1px solid var(--border2);
+     color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 12px 18px;  
+  z-index: 999;
+  max-width: 320px;  
+  opacity: 0;
+  transform: translateY(8px);  
+  transition: all .2s;
+  pointer-events: none;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.ok { border-left: 3px solid var(--green); }
+#toast.err { border-left: 3px solid var(--red); }
+
+.detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+.detail-item {}
+.detail-key {
+  font-family: var(--font-mono);
+  font-size: 9px;
+      letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text3);
+    margin-bottom: 3px;
+}
+.detail-val { font-size: 14px; color: var(--text); }
+
+.status-pipe {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.status-step {
+  flex: 1;
+  min-width: 80px;
+  text-align: center;  
+  padding: 8px 4px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text3);
+  position: relative;
+}
+.status-step.done { color: var(--amber); }
+.status-step.current { color: var(--amber2); font-weight: 700; }
+.status-step::after {
+  content: '›';
+  position: absolute;  
+    right: -6px;
+  top: 50%;
+      transform: translateY(-50%);
+  color: var(--border2);
+  font-size: 16px;
+}
+.status-step:last-child::after { display: none; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); }
+::-webkit-scrollbar-thumb:hover { background: #444; }
+
+.empty-state {  
+  padding: 40px;
+  text-align: center;
+  color: var(--text3);
+  font-family: var(--font-mono);  
+    font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.loading { color: var(--text3); font-family: var(--font-mono); font-size: 11px; padding: 20px; }
+.price-tag { font-family: var(--font-mono); font-size: 12px; }
+
+.stock-good { color: var(--green); }
+.stock-low { color: var(--amber); }
+.stock-zero { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">ClothingStore</div>
+    <div class="login-sub">▸ Painel Administrativo</div>
+    <div class="field-group">
+      <label class="field-label">E-mail</label>
+      <input type="email" id="login-email" class="field-input" placeholder="admin@clothingstore.com" autocomplete="username">
+    </div>
+    <div class="field-group">
+        <label class="field-label">Senha</label>
+       <input type="password" id="login-password" class="field-input" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Entrar no sistema</button>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-hint">
+      <p><strong>Gerente:</strong> admin@clothingstore.com / Admin@123<br>
+      <strong>Estoquista:</strong> estoque@clothingstore.com / Stock@123</p>  
+    </div>
+   </div>
+</div>
+
+<div id="app">
+   <header>
+    <div class="header-logo">Clothing<span>Store</span></div>  
+    <div class="header-right">
+      <div class="header-user">  
+        <span class="user-badge" id="header-role">—</span>
+        <span class="header-name" id="header-name">—</span>
+      </div>
+       <button class="btn-logout" onclick="doLogout()">Sair</button>
+    </div>
+    </header>
+
+  <div class="main-wrap">
+    <nav id="sidebar">  
+      <div class="nav-section">Visão Geral</div>  
+       <div class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+        <span class="nav-icon">◈</span> Dashboard
+      </div>
+
+      <div class="nav-section">Catálogo</div>
+      <div class="nav-item" onclick="showPage('products')" data-page="products">
+        <span class="nav-icon">◻</span> Produtos
+      </div>
+        <div class="nav-item" onclick="showPage('inventory')" data-page="inventory">
+        <span class="nav-icon">◑</span> Estoque
+      </div>  
+
+      <div class="nav-section">Vendas</div>
+      <div class="nav-item" onclick="showPage('orders')" data-page="orders">  
+        <span class="nav-icon">◎</span> Pedidos
+      </div>
+
+      <div class="nav-section" id="nav-admin-section">Administração</div>
+      <div class="nav-item" onclick="showPage('users')" data-page="users" id="nav-users">
+        <span class="nav-icon">◉</span> Usuários  
+      </div>
+        </nav>
+
+     <main>
+
+      
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title"><small>Visão Geral</small>Dashboard</div>
+        </div>
+          <div class="stats-grid" id="stats-grid">
+          <div class="stat-card"><div class="stat-label">Produtos Ativos</div><div class="stat-value" id="stat-products">—</div></div>  
+          <div class="stat-card"><div class="stat-label">SKUs Cadastrados</div><div class="stat-value" id="stat-skus">—</div></div>
+          <div class="stat-card"><div class="stat-label">Itens Disponíveis</div><div class="stat-value" id="stat-stock">—</div></div>  
+          <div class="stat-card"><div class="stat-label">Pedidos Abertos</div><div class="stat-value" id="stat-orders">—</div></div>  
+          <div class="stat-card"><div class="stat-label">Usuários</div><div class="stat-value" id="stat-users">—</div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="table-wrap">
+             <div class="table-toolbar" style="justify-content:space-between;">
+              <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Pedidos Recentes</span>
+            </div>
+            <table id="dash-orders-table">
+              <thead><tr><th>#</th><th>Cliente</th><th>Status</th><th>Total</th></tr></thead>
+              <tbody id="dash-orders-body"></tbody>  
+
+            </table>
+
+          </div>
+             <div class="table-wrap">
+            <div class="table-toolbar" style="justify-content:space-between;">
+              <span style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--text3)">Estoque Crítico</span>
+            </div>
+            <table>
+              <thead><tr><th>SKU</th><th>Produto</th><th>Disp.</th></tr></thead>
+              <tbody id="dash-stock-body"></tbody>
+               </table>
+          </div>
+        </div>
+      </div>
+
+      
+          <div class="page" id="page-products">
+        <div class="page-header">
+          <div class="page-title"><small>Catálogo</small>Produtos</div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <input type="text" class="search-input" placeholder="Buscar produto..." oninput="filterTable('products-body', this.value, [0,1,2])">
+            <select class="select-filter" onchange="loadProducts(this.value)">
+                <option value="">Todas categorias</option>
+              <option value="camiseta">Camisetas</option>
+              <option value="calca">Calças</option>
+              <option value="meia">Meias</option>
+                <option value="intima">Íntimas</option>
+            </select>
+            <button class="btn-add" onclick="openProductModal()" id="btn-add-product">+ Produto</button>
+              </div>
+          <table>
+               <thead><tr><th>#</th><th>Nome</th><th>Categoria</th><th>Preço</th><th>Disponível</th><th>SKUs</th><th>Status</th><th>Ações</th></tr></thead>
+            <tbody id="products-body"><tr><td colspan="8" class="loading">Carregando...</td></tr></tbody>
+          </table>
+
+        </div>
+
+       </div>
+
+      
+      <div class="page" id="page-inventory">
+        <div class="page-header">
+           <div class="page-title"><small>Catálogo</small>Estoque</div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <input type="text" class="search-input" placeholder="Buscar SKU ou produto..." oninput="filterTable('inventory-body', this.value, [0,1,2,3])">  
+              <button class="btn-add" onclick="openInventoryModal()" id="btn-add-sku">+ Novo SKU</button>
+            </div>
+          <table>
+            <thead><tr><th>SKU</th><th>Produto</th><th>Tamanho</th><th>Cor</th><th>Disponível</th><th>Reservado</th><th>Vendido</th><th>Ações</th></tr></thead>
+            <tbody id="inventory-body"><tr><td colspan="8" class="loading">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>  
+
+      
+       <div class="page" id="page-orders">
+         <div class="page-header">
+          <div class="page-title"><small>Vendas</small>Pedidos</div>
+          <button class="btn-add" onclick="openOrderModal()">+ Novo Pedido</button>
+        </div>  
+        <div class="table-wrap">  
+          <div class="table-toolbar">
+            <input type="text" class="search-input" placeholder="Buscar pedido..." oninput="filterTable('orders-body', this.value, [0,1,2])">
+            <select class="select-filter" onchange="loadOrders(this.value)">
+              <option value="">Todos os status</option>
+              <option value="created">Criado</option>
+              <option value="reserved">Reservado</option>
+              <option value="awaiting_payment">Aguard. Pagamento</option>
+              <option value="paid">Pago</option>  
+              <option value="finished">Finalizado</option>
+              <option value="cancelled">Cancelado</option>
+              <option value="expired">Expirado</option>
+            </select>
+          </div>
+          <table>
+            <thead><tr><th>#</th><th>Cliente</th><th>Status</th><th>Itens</th><th>Total</th><th>Data</th><th>Ações</th></tr></thead>
+            <tbody id="orders-body"><tr><td colspan="7" class="loading">Carregando...</td></tr></tbody>
+           </table>
+        </div>  
+      </div>  
+
+      
+      <div class="page" id="page-users">
+        <div class="page-header">
+          <div class="page-title"><small>Administração</small>Usuários</div>
+          <button class="btn-add" onclick="openUserModal()">+ Usuário</button>
+        </div>
+        <div class="table-wrap">
+          <div class="table-toolbar">
+            <input type="text" class="search-input" placeholder="Buscar usuário..." oninput="filterTable('users-body', this.value, [0,1,2])">
+          </div>
+            <table>
+            <thead><tr><th>#</th><th>Nome</th><th>E-mail</th><th>Perfil</th><th>Status</th><th>Criado em</th><th>Ações</th></tr></thead>
+            <tbody id="users-body"><tr><td colspan="7" class="loading">Carregando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+   </div>
+</div>
+
+<div class="modal-overlay" id="modal-product">
+      <div class="modal">
+    <div class="modal-header">
+       <div class="modal-title" id="modal-product-title">Novo Produto</div>
+      <button class="modal-close" onclick="closeModal('modal-product')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="product-id">
+      <div class="form-row single" style="margin-bottom:14px">
+        <div class="field-group">
+          <label class="field-label">Nome do Produto</label>  
+          <input type="text" id="product-name" class="field-input" placeholder="Ex: Camiseta Básica Premium">  
+        </div>
+      </div>
+        <div class="form-row" style="margin-bottom:14px">
+        <div class="field-group">
+           <label class="field-label">Categoria</label>
+            <select id="product-category" class="field-input">
+            <option value="camiseta">Camiseta</option>
+            <option value="calca">Calça</option>
+            <option value="meia">Meia</option>  
+            <option value="intima">Roupa Íntima</option>
+            <option value="outro">Outro</option>
+          </select>
+        </div>
+           <div class="field-group">
+          <label class="field-label">Preço (R$)</label>
+          <input type="number" id="product-price" class="field-input" placeholder="89.90" step="0.01" min="0">
+        </div>
+         </div>
+       <div class="form-row single">
+        <div class="field-group">
+           <label class="field-label">Descrição</label>
+          <textarea id="product-description" class="field-input" rows="3" style="resize:vertical;font-family:var(--font-body)"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-product')">Cancelar</button>
+      <button class="btn-save" onclick="saveProduct()">Salvar Produto</button>  
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-inventory">
+  <div class="modal">  
+    <div class="modal-header">
+      <div class="modal-title">Adicionar SKU ao Estoque</div>
+      <button class="modal-close" onclick="closeModal('modal-inventory')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row single" style="margin-bottom:14px">
+        <div class="field-group">
+            <label class="field-label">Produto</label>
+          <select id="sku-product-id" class="field-input"></select>
+        </div>
+      </div>
+      <div class="form-row" style="margin-bottom:14px">
+        <div class="field-group">
+             <label class="field-label">Tamanho</label>
+          <input type="text" id="sku-size" class="field-input" placeholder="Ex: M, GG, 40, 38-43">
+          </div>
+        <div class="field-group">
+          <label class="field-label">Cor</label>  
+          <input type="text" id="sku-color" class="field-input" placeholder="Ex: Preto, Branco">
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="field-group">
+          <label class="field-label">Quantidade Inicial</label>
+          <input type="number" id="sku-qty" class="field-input" value="10" min="0">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-inventory')">Cancelar</button>
+         <button class="btn-save" onclick="saveSku()">Criar SKU</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-adjust">
+     <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Ajustar Estoque</div>
+      <button class="modal-close" onclick="closeModal('modal-adjust')">✕</button>  
+     </div>
+    <div class="modal-body">
+      <input type="hidden" id="adjust-id">
+       <div id="adjust-info" style="background:var(--bg3);border:1px solid var(--border);padding:12px 14px;margin-bottom:16px;font-family:var(--font-mono);font-size:11px;color:var(--text2)"></div>
+      <div class="form-row" style="margin-bottom:14px">
+           <div class="field-group">
+          <label class="field-label">Delta (+ entrada / - saída)</label>
+          <input type="number" id="adjust-delta" class="field-input" placeholder="+20 ou -5">
+        </div>
+        <div class="field-group">  
+          <label class="field-label">Motivo</label>
+          <input type="text" id="adjust-reason" class="field-input" placeholder="Ex: Reposição fornecedor">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-adjust')">Cancelar</button>
+      <button class="btn-save" onclick="saveAdjust()">Confirmar Ajuste</button>  
+    </div>
+   </div>
+</div>
+
+<div class="modal-overlay" id="modal-order">
+  <div class="modal" style="width:600px">  
+    <div class="modal-header">
+         <div class="modal-title" id="modal-order-title">Pedido #—</div>
+      <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
+    </div>
+    <div class="modal-body" id="modal-order-body"></div>
+    <div class="modal-footer" id="modal-order-footer"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-new-order">
+  <div class="modal" style="width:580px">
+       <div class="modal-header">
+      <div class="modal-title">Novo Pedido</div>
+      <button class="modal-close" onclick="closeModal('modal-new-order')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row single" style="margin-bottom:14px">
+        <div class="field-group">
+           <label class="field-label">Cliente (usuário)</label>
+          <select id="order-user-id" class="field-input"></select>
+        </div>  
+      </div>
+      <div style="margin-bottom:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <span class="field-label" style="margin:0">Itens</span>
+          <button class="btn-action" onclick="addOrderItem()">+ Item</button>
+        </div>
+        <div id="order-items-list"></div>
+       </div>
+      <div class="form-row single">
+           <div class="field-group">
+          <label class="field-label">Observações</label>
+          <input type="text" id="order-notes" class="field-input" placeholder="Ex: Entrega no período da manhã">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('modal-new-order')">Cancelar</button>
+          <button class="btn-save" onclick="saveOrder()">Criar Pedido</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-user">
+  <div class="modal">
+    <div class="modal-header">  
+       <div class="modal-title" id="modal-user-title">Novo Usuário</div>
+      <button class="modal-close" onclick="closeModal('modal-user')">✕</button>  
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="user-id">
+      <div class="form-row" style="margin-bottom:14px">
+         <div class="field-group">
+           <label class="field-label">Nome</label>
+          <input type="text" id="user-name" class="field-input" placeholder="Nome completo">  
+        </div>
+        <div class="field-group">
+          <label class="field-label">E-mail</label>  
+          <input type="email" id="user-email" class="field-input" placeholder="email@exemplo.com">
+        </div>
+      </div>
+       <div class="form-row">
+        <div class="field-group">
+          <label class="field-label">Senha <span id="pwd-hint" style="color:var(--text3)">(obrigatório para novo)</span></label>
+             <input type="password" id="user-password" class="field-input" placeholder="Mínimo 6 caracteres">
+        </div>
+        <div class="field-group">
+          <label class="field-label">Perfil</label>
+          <select id="user-role" class="field-input">
+            <option value="customer">Cliente</option>
+            <option value="stockist">Estoquista</option>
+            <option value="manager">Gerente</option>
+          </select>
+        </div>
+         </div>
+    </div>
+    <div class="modal-footer">  
+       <button class="btn-cancel" onclick="closeModal('modal-user')">Cancelar</button>
+       <button class="btn-save" onclick="saveUser()">Salvar</button>
+       </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = 'http://localhost:5000';
+let token = '', userRole = '', userName = '', userId = 0;
+let allInventory = [], allProducts = [], allUsers = [];
+
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value;
+  const pw = document.getElementById('login-password').value;
+     const err = document.getElementById('login-error');
+  err.style.display = 'none';
+  try {
+    const res = await api('POST', '/auth/login', { email, password: pw }, false);
+    if (!res.token) throw new Error(res.error || 'Falha no login');
+       if (!['manager','stockist'].includes(res.role)) {
+      throw new Error('Acesso restrito ao painel administrativo.');
+    }
+    token = res.token; userRole = res.role; userName = res.name; userId = res.userId;
+       document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    document.getElementById('header-role').textContent = roleLabel(userRole);
+    document.getElementById('header-name').textContent = userName;
+    if (userRole !== 'manager') {
+      document.getElementById('nav-users').style.display = 'none';
+      document.getElementById('nav-admin-section').style.display = 'none';
+       document.getElementById('btn-add-product').style.display = 'none';
+    }
+     initDashboard();
+   } catch(e) {
+    err.textContent = e.message;
+    err.style.display = 'block';  
+  }
+}
+
+function doLogout() {
+  token = ''; userRole = '';
+  document.getElementById('app').classList.remove('visible');  
+   document.getElementById('login-screen').style.display = 'flex';
+}
+
+document.addEventListener('keydown', e => {
+     if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') doLogin();
+});
+
+
+async function api(method, path, body = null, auth = true) {  
+    const opts = {
+        method,
+    headers: { 'Content-Type': 'application/json' },
+  };
+  if (auth) opts.headers['Authorization'] = 'Bearer ' + token;
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(API + path, opts);
+    const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+
+function showPage(name) {
+     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');  
+  document.querySelector(`[data-page="${name}"]`)?.classList.add('active');  
+      const loaders = { products: () => loadProducts(), inventory: () => loadInventory(), orders: () => loadOrders(), users: () => loadUsers(), dashboard: () => initDashboard() };
+  loaders[name]?.();
+}
+
+
+async function initDashboard() {
+  try {
+    const [products, inventory, orders, users] = await Promise.all([
+      api('GET', '/products'), api('GET', '/inventory'),
+      api('GET', '/orders'),
+      userRole === 'manager' ? api('GET', '/users') : Promise.resolve([])
+    ]);
+
+    document.getElementById('stat-products').textContent = products.filter(p => p.active).length;
+    document.getElementById('stat-skus').textContent = inventory.length;
+    document.getElementById('stat-stock').textContent = inventory.reduce((s, i) => s + i.qtyAvailable, 0);
+    document.getElementById('stat-orders').textContent = orders.filter(o => !['cancelado','finalizado'].includes(o.status)).length;
+    document.getElementById('stat-users').textContent = users.length || '—';
+
+    const tbody = document.getElementById('dash-orders-body');
+    const recent = [...orders].slice(0, 6);
+
+    tbody.innerHTML = recent.length ? recent.map(o => `
+
+      <tr>
+        <td class="td-mono">#${o.id}</td>  
+        <td class="td-name">${o.userName || '—'}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td class="price-tag">R$ ${o.total.toFixed(2)}</td>
+          </tr>`).join('') : '<tr><td colspan="4" class="empty-state">Nenhum pedido</td></tr>';
+
+    const critical = inventory.filter(i => i.qtyAvailable <= 3).slice(0, 6);  
+    document.getElementById('dash-stock-body').innerHTML = critical.length ? critical.map(i => `
+      <tr>
+        <td class="td-mono" style="font-size:10px">${i.sku}</td>
+        <td>${i.productName}</td>
+        <td class="${i.qtyAvailable === 0 ? 'stock-zero' : 'stock-low'}">${i.qtyAvailable}</td>
+      </tr>`).join('') : '<tr><td colspan="3" class="empty-state">Estoque OK</td></tr>';
+  } catch(e) { showToast('Erro ao carregar dashboard: ' + e.message, 'err'); }
+}
+
+
+async function loadProducts(category = '') {
+  const tbody = document.getElementById('products-body');
+  tbody.innerHTML = '<tr><td colspan="8" class="loading">Carregando...</td></tr>';
+  try {
+    const url = '/products' + (category ? `?category=${category}` : '');
+    allProducts = await api('GET', url);
+    tbody.innerHTML = allProducts.length ? allProducts.map(p => `
+      <tr>
+        <td class="td-mono">${p.id}</td>
+           <td class="td-name">${p.name}</td>
+        <td><span class="badge badge-gray">${catLabel(p.category)}</span></td>
+        <td class="price-tag">R$ ${p.price.toFixed(2)}</td>
+        <td class="${p.totalAvailable > 10 ? 'stock-good' : p.totalAvailable > 0 ? 'stock-low' : 'stock-zero'}">${p.totalAvailable}</td>
+        <td class="td-mono">${p.skuCount}</td>
+        <td>${p.active ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-red">Inativo</span>'}</td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;">
+          ${userRole === 'manager' ? `<button class="btn-action" onclick="editProduct(${p.id})">Editar</button>
+          <button class="btn-action danger" onclick="toggleProduct(${p.id}, ${!p.active})">${p.active ? 'Desativar' : 'Ativar'}</button>` : '—'}
+        </td>  
+      </tr>`).join('') : '<tr><td colspan="8" class="empty-state">Nenhum produto encontrado.</td></tr>';
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Erro: ${e.message}</td></tr>`; }
+}
+
+function openProductModal(p = null) {
+  document.getElementById('product-id').value = p?.id || '';
+  document.getElementById('modal-product-title').textContent = p ? 'Editar Produto' : 'Novo Produto';
+  document.getElementById('product-name').value = p?.name || '';
+     document.getElementById('product-category').value = p?.category || 'camiseta';
+  document.getElementById('product-price').value = p?.price || '';
+  document.getElementById('product-description').value = p?.description || '';  
+  openModal('modal-product');
+}
+
+async function editProduct(id) {
+  const res = await api('GET', `/products/${id}`);
+   openProductModal(res.product);
+}
+
+async function saveProduct() {
+  const id = document.getElementById('product-id').value;
+
+  const body = {
+    name: document.getElementById('product-name').value,  
+    category: document.getElementById('product-category').value,
+    price: parseFloat(document.getElementById('product-price').value),
+    description: document.getElementById('product-description').value  
+
+  };
+  try {
+    if (id) await api('PATCH', `/products/${id}`, body);
+    else await api('POST', '/products', body);
+    closeModal('modal-product');
+    showToast(id ? 'Produto atualizado.' : 'Produto criado.', 'ok');
+    loadProducts();
+     } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function toggleProduct(id, active) {
+  try {
+    await api('PATCH', `/products/${id}`, { active });
+       showToast(`Produto ${active ? 'ativado' : 'desativado'}.`, 'ok');
+    loadProducts();
+  } catch(e) { showToast(e.message, 'err'); }  
+}
+
+
+async function loadInventory() {  
+  const tbody = document.getElementById('inventory-body');
+  tbody.innerHTML = '<tr><td colspan="8" class="loading">Carregando...</td></tr>';
+  try {
+    allInventory = await api('GET', '/inventory');  
+    tbody.innerHTML = allInventory.length ? allInventory.map(i => `  
+      <tr>
+        <td class="td-mono" style="font-size:11px">${i.sku}</td>
+           <td class="td-name">${i.productName}</td>
+        <td><span class="badge badge-gray">${i.size}</span></td>
+
+        <td>${i.color}</td>
+
+        <td class="${i.qtyAvailable > 10 ? 'stock-good' : i.qtyAvailable > 0 ? 'stock-low' : 'stock-zero'}">${i.qtyAvailable}</td>
+        <td class="td-mono">${i.qtyReserved}</td>
+        <td class="td-mono">${i.qtySold}</td>
+        <td><button class="btn-action" onclick="openAdjust(${i.id}, '${i.sku}', ${i.qtyAvailable})">Ajustar</button></td>
+
+      </tr>`).join('') : '<tr><td colspan="8" class="empty-state">Nenhum item cadastrado.</td></tr>';
+
+     } catch(e) { tbody.innerHTML = `<tr><td colspan="8" class="empty-state">Erro: ${e.message}</td></tr>`; }
+}
+
+function openInventoryModal() {
+  const sel = document.getElementById('sku-product-id');
+  sel.innerHTML = allProducts.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  if (!allProducts.length) api('GET', '/products').then(ps => { allProducts = ps; sel.innerHTML = ps.map(p => `<option value="${p.id}">${p.name}</option>`).join(''); });
+    openModal('modal-inventory');
+}
+
+async function saveSku() {
+  try {
+    await api('POST', '/inventory', {
+      productId: parseInt(document.getElementById('sku-product-id').value),
+      size: document.getElementById('sku-size').value,
+      color: document.getElementById('sku-color').value,
+      quantity: parseInt(document.getElementById('sku-qty').value)  
+    });
+    closeModal('modal-inventory');
+    showToast('SKU criado com sucesso.', 'ok');
+      loadInventory();
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+function openAdjust(id, sku, current) {
+  document.getElementById('adjust-id').value = id;
+  document.getElementById('adjust-info').textContent = `SKU: ${sku}  |  Disponível atual: ${current}`;
+  document.getElementById('adjust-delta').value = '';
+  document.getElementById('adjust-reason').value = '';
+    openModal('modal-adjust');
+}
+
+async function saveAdjust() {
+  const id = document.getElementById('adjust-id').value;
+     const delta = parseInt(document.getElementById('adjust-delta').value);
+  const reason = document.getElementById('adjust-reason').value || 'Ajuste manual';
+  try {
+    const res = await api('PATCH', `/inventory/${id}/adjust`, { delta, reason });
+    closeModal('modal-adjust');
+
+    showToast(res.message, 'ok');
+    loadInventory();
+  } catch(e) { showToast(e.message, 'err'); }  
+}
+
+
+async function loadOrders(status = '') {
+  const tbody = document.getElementById('orders-body');
+  tbody.innerHTML = '<tr><td colspan="7" class="loading">Carregando...</td></tr>';
+  try {
+    const url = '/orders' + (status ? `?status=${status}` : '');  
+    const orders = await api('GET', url);
+    tbody.innerHTML = orders.length ? orders.map(o => `
+      <tr>
+        <td class="td-mono">#${o.id}</td>  
+        <td class="td-name">${o.userName || '—'}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td class="td-mono">${o.itemCount}</td>
+        <td class="price-tag">R$ ${o.total.toFixed(2)}</td>
+        <td class="td-mono" style="font-size:10px">${fmtDate(o.createdAt)}</td>  
+        <td><button class="btn-action" onclick="openOrder(${o.id})">Detalhes</button></td>
+      </tr>`).join('') : '<tr><td colspan="7" class="empty-state">Nenhum pedido encontrado.</td></tr>';
+   } catch(e) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Erro: ${e.message}</td></tr>`; }
+}
+
+async function openOrder(id) {
+  try {
+    const data = await api('GET', `/orders/${id}`);
+    const { order, items, payments } = data;  
+    document.getElementById('modal-order-title').textContent = `Pedido #${order.id}`;
+
+    const pipe = ['created','reserved','awaiting_payment','paid','finished'];
+    const pipeLabels = { created:'Criado', reserved:'Reservado', awaiting_payment:'Aguard. Pagamento', paid:'Pago', finished:'Finalizado', cancelled:'Cancelado', expired:'Expirado' };
+    const idx = pipe.indexOf(order.status);
+
+    let pipeHtml = '';
+    if (!['cancelled','expired'].includes(order.status)) {
+      pipeHtml = `<div class="status-pipe">${pipe.map((s,i) => `<div class="status-step ${i < idx ? 'done' : i === idx ? 'current' : ''}">${pipeLabels[s]}</div>`).join('')}</div>`;
+    } else {  
+        pipeHtml = `<div style="margin-bottom:16px">${statusBadge(order.status)}</div>`;
+    }
+
+    document.getElementById('modal-order-body').innerHTML = `
+      ${pipeHtml}
+      <div class="detail-grid">
+        <div class="detail-item"><div class="detail-key">Cliente</div><div class="detail-val">${order.userName}</div></div>
+        <div class="detail-item"><div class="detail-key">E-mail</div><div class="detail-val">${order.userEmail}</div></div>
+        <div class="detail-item"><div class="detail-key">Total</div><div class="detail-val" style="color:var(--amber);font-family:var(--font-mono)">R$ ${order.total.toFixed(2)}</div></div>
+        <div class="detail-item"><div class="detail-key">Criado em</div><div class="detail-val">${fmtDate(order.createdAt)}</div></div>
+        ${order.notes ? `<div class="detail-item" style="grid-column:1/-1"><div class="detail-key">Observações</div><div class="detail-val">${order.notes}</div></div>` : ''}
+      </div>
+      <div style="margin-bottom:16px">
+        <div class="field-label" style="margin-bottom:8px">Itens do Pedido</div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Produto</th><th>SKU</th><th>Tam.</th><th>Cor</th><th>Qtd</th><th>Unit.</th><th>Subtotal</th></tr></thead>
+             <tbody>${items.map(i => `<tr>
+              <td class="td-name">${i.productName}</td>
+              <td class="td-mono" style="font-size:10px">${i.sku}</td>
+              <td><span class="badge badge-gray">${i.size}</span></td>
+              <td>${i.color}</td>
+              <td class="td-mono">${i.quantity}</td>
+              <td class="price-tag">R$ ${i.unitPrice.toFixed(2)}</td>
+              <td class="price-tag" style="color:var(--amber)">R$ ${i.subtotal.toFixed(2)}</td>
+            </tr>`).join('')}</tbody>
+            </table>
+        </div>
+      </div>
+      ${payments.length ? `<div>
+        <div class="field-label" style="margin-bottom:8px">Pagamentos</div>
+        ${payments.map(p => `<div style="background:var(--bg3);border:1px solid var(--border);padding:10px 14px;font-family:var(--font-mono);font-size:11px;color:var(--text2)">
+          ${p.method.toUpperCase()} | R$ ${p.amount.toFixed(2)} | ${p.status.toUpperCase()} | TX: ${p.transactionId}
+        </div>`).join('')}
+      </div>` : ''}
+    `;
+
+    const transitions = {  
+      created: ['reserved','cancelled'],
+      reserved: ['awaiting_payment','cancelled'],
+      awaiting_payment: ['cancelled','expired'],
+      paid: ['finished']
+    };
+    const next = transitions[order.status] || [];
+      const btnLabels = { reserved: 'Reservar Estoque', awaiting_payment: 'Aguardar Pagamento', cancelled: 'Cancelar', expired: 'Expirar', finished: 'Finalizar' };
+
+    const btnClasses = { cancelled: 'danger', expired: 'danger', finished: 'success' };
+
+    let footerHtml = next.map(s => `<button class="btn-action ${btnClasses[s]||''}" onclick="changeStatus(${order.id},'${s}')">${btnLabels[s]||s}</button>`).join('');
+
+    if (order.status === 'awaiting_payment') {
+      footerHtml += `<button class="btn-save" style="margin-left:8px" onclick="openPayment(${order.id}, ${order.total})">Registrar Pagamento</button>`;
+    }
+
+    document.getElementById('modal-order-footer').innerHTML = footerHtml + `<button class="btn-cancel" onclick="closeModal('modal-order')">Fechar</button>`;
+    openModal('modal-order');
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function changeStatus(orderId, status) {
+  try {
+     await api('PATCH', `/orders/${orderId}/status`, { status });
+      closeModal('modal-order');
+    showToast(`Pedido atualizado para "${status}".`, 'ok');
+    loadOrders();  
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+function openPayment(orderId, total) {
+  const method = prompt('Método de pagamento:\ncredit_card | debit_card | pix | boleto');
+  if (!method) return;
+  api('POST', '/payments', { orderId, amount: total, method })
+    .then(() => { closeModal('modal-order'); showToast('Pagamento registrado. Pedido pago.', 'ok'); loadOrders(); })
+    .catch(e => showToast(e.message, 'err'));
+}
+
+// Novo pedido
+async function openOrderModal() {
+  const [users, products] = await Promise.all([
+    userRole === 'manager' ? api('GET', '/users') : Promise.resolve([]),
+    api('GET', '/products')  
+  ]);
+  allProducts = products; allUsers = users;
+  const usel = document.getElementById('order-user-id');
+  usel.innerHTML = (users.length ? users : [{ id: userId, name: userName }])
+    .filter(u => u.role !== 'manager' || !u.role)
+    .map(u => `<option value="${u.id}">${u.name} (${u.email || ''})</option>`).join('');
+  document.getElementById('order-items-list').innerHTML = '';
+  document.getElementById('order-notes').value = '';
+  addOrderItem();
+  openModal('modal-new-order');  
+}
+
+function addOrderItem() {
+  const list = document.getElementById('order-items-list');
+  const idx = list.children.length;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 80px 28px;gap:8px;margin-bottom:8px;';
+  div.innerHTML = `
+     <select class="field-input order-inv-sel" style="font-size:12px">
+      ${allInventory.length ? allInventory.map(i => `<option value="${i.id}">${i.productName} — ${i.size} / ${i.color} (disp: ${i.qtyAvailable})</option>`).join('') : '<option>Carregando...</option>'}
+    </select>
+    <input type="number" class="field-input order-qty" value="1" min="1" placeholder="Qtd">
+    <button class="btn-action danger" onclick="this.parentElement.remove()" style="padding:4px">✕</button>  
+  `;
+  list.appendChild(div);
+  if (!allInventory.length) api('GET', '/inventory').then(inv => { allInventory = inv; document.querySelectorAll('.order-inv-sel').forEach(s => s.innerHTML = inv.map(i => `<option value="${i.id}">${i.productName} — ${i.size} / ${i.color} (disp: ${i.qtyAvailable})</option>`).join('')); });
+}
+
+async function saveOrder() {
+  const items = [...document.querySelectorAll('#order-items-list > div')].map(div => ({
+    inventoryItemId: parseInt(div.querySelector('.order-inv-sel').value),
+      quantity: parseInt(div.querySelector('.order-qty').value)
+  }));
+  try {
+     await api('POST', '/orders', {
+      userId: parseInt(document.getElementById('order-user-id').value),
+      items, notes: document.getElementById('order-notes').value
+    });
+    closeModal('modal-new-order');
+    showToast('Pedido criado com sucesso.', 'ok');
+    loadOrders();
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+
+
+async function loadUsers() {
+  const tbody = document.getElementById('users-body');
+  tbody.innerHTML = '<tr><td colspan="7" class="loading">Carregando...</td></tr>';
+  try {
+    allUsers = await api('GET', '/users');
+    tbody.innerHTML = allUsers.length ? allUsers.map(u => `
+      <tr>
+           <td class="td-mono">${u.id}</td>
+
+        <td class="td-name">${u.name}</td>
+
+        <td class="td-mono">${u.email}</td>  
+        <td>${roleBadge(u.role)}</td>
+        <td>${u.active ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-red">Inativo</span>'}</td>
+        <td class="td-mono" style="font-size:10px">${fmtDate(u.createdAt)}</td>
+        <td style="display:flex;gap:6px">
+          <button class="btn-action" onclick="editUser(${u.id})">Editar</button>
+          <button class="btn-action danger" onclick="toggleUser(${u.id}, ${!u.active})">${u.active ? 'Desativar' : 'Ativar'}</button>  
+        </td>
+        </tr>`).join('') : '<tr><td colspan="7" class="empty-state">Nenhum usuário.</td></tr>';
+  } catch(e) { tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Erro: ${e.message}</td></tr>`; }
+}
+
+function openUserModal() {
+  document.getElementById('user-id').value = '';
+    document.getElementById('modal-user-title').textContent = 'Novo Usuário';
+    document.getElementById('user-name').value = '';
+  document.getElementById('user-email').value = '';
+  document.getElementById('user-password').value = '';
+  document.getElementById('user-role').value = 'customer';  
+  document.getElementById('user-email').disabled = false;
+  document.getElementById('pwd-hint').textContent = '(obrigatório para novo)';
+  openModal('modal-user');
+}
+
+function editUser(id) {
+
+  const u = allUsers.find(u => u.id === id);  
+  if (!u) return;
+  document.getElementById('user-id').value = u.id;
+    document.getElementById('modal-user-title').textContent = 'Editar Usuário';
+  document.getElementById('user-name').value = u.name;
+     document.getElementById('user-email').value = u.email;
+  document.getElementById('user-email').disabled = true;
+  document.getElementById('user-password').value = '';
+  document.getElementById('user-role').value = u.role;
+  document.getElementById('pwd-hint').textContent = '(deixe em branco para não alterar)';  
+  openModal('modal-user');
+}
+
+async function saveUser() {
+  const id = document.getElementById('user-id').value;
+  try {
+    if (id) {
+      await api('PATCH', `/users/${id}`, { name: document.getElementById('user-name').value, role: document.getElementById('user-role').value });
+        } else {
+      await api('POST', '/users', { name: document.getElementById('user-name').value, email: document.getElementById('user-email').value, password: document.getElementById('user-password').value, role: document.getElementById('user-role').value });  
+    }
+     closeModal('modal-user');
+    showToast(id ? 'Usuário atualizado.' : 'Usuário criado.', 'ok');
+    loadUsers();  
+  } catch(e) { showToast(e.message, 'err'); }
+}
+
+async function toggleUser(id, active) {  
+  try {
+    await api('PATCH', `/users/${id}`, { active });
+      showToast(`Usuário ${active ? 'ativado' : 'desativado'}.`, 'ok');
+    loadUsers();
+      } catch(e) { showToast(e.message, 'err'); }
+}
+
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg, type = 'ok') {
+      const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.className = '', 3500);
+}
+
+function filterTable(tbodyId, q, cols) {  
+      const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  const lq = q.toLowerCase();
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+        const match = cols.some(i => cells[i]?.textContent.toLowerCase().includes(lq));
+    row.style.display = match || !q ? '' : 'none';
+  });
+}
+
+function statusBadge(s) {
+  const map = { created:'badge-gray', reserved:'badge-blue', awaiting_payment:'badge-amber', paid:'badge-green', finished:'badge-green', cancelled:'badge-red', expired:'badge-red' };
+  const label = { created:'Criado', reserved:'Reservado', awaiting_payment:'Aguard. Pgto', paid:'Pago', finished:'Finalizado', cancelled:'Cancelado', expired:'Expirado' };
+  return `<span class="badge ${map[s]||'badge-gray'}">${label[s]||s}</span>`;
+}
+function reservationBadge(s) {
+      const map = { active:'badge-amber', released:'badge-green', expired:'badge-red' };
+  const label = { active:'Ativa', released:'Liberada', expired:'Expirada' };
+  return `<span class="badge ${map[s]||'badge-gray'}">${label[s]||s}</span>`;
+}
+function roleBadge(r) {  
+
+  const map = { manager:'badge-amber', stockist:'badge-blue', customer:'badge-gray' };
+
+  const label = { manager:'Gerente', stockist:'Estoquista', customer:'Cliente' };
+  return `<span class="badge ${map[r]||'badge-gray'}">${label[r]||r}</span>`;
+}
+function roleLabel(r) { return { manager:'Gerente', stockist:'Estoquista', customer:'Cliente' }[r] || r; }
+function catLabel(c) { return { camiseta:'Camiseta', calca:'Calça', meia:'Meia', intima:'Íntima' }[c] || c; }
+function fmtDate(d) {
+    if (!d) return '—';
+  return new Date(d.replace(' ','T')+'Z').toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+</script>
+</body>
+</html>
+

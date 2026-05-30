@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRESS &amp; GO — Cropped</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/loja.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top px-3">
+  <a class="navbar-brand" href="/">DRESS<em>&amp;</em>GO</a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+  <div class="collapse navbar-collapse" id="nav">
+    <ul class="navbar-nav me-auto">
+      <li class="nav-item"><a class="nav-link" href="/camisa">Camisas</a></li>
+      <li class="nav-item"><a class="nav-link" href="/calcas">Calças</a></li>
+      <li class="nav-item"><a class="nav-link" href="/blusas">Blusas</a></li>
+      <li class="nav-item"><a class="nav-link" href="/cropped">Cropped</a></li>
+      <li class="nav-item"><a class="nav-link" href="/shorts">Shorts</a></li>
+    </ul>
+    <div class="d-flex gap-2 align-items-center">
+      <a id="nav-perfil" href="/perfil" class="btn btn-outline-light btn-sm d-none">Meu Perfil</a>
+      <a id="nav-entrar" href="/account/cliente" class="btn btn-outline-primary btn-sm">Entrar</a>
+      <button class="btn btn-primary btn-sm" onclick="abrirSacola()">Sacola <span class="badge bg-dark cart-badge">0</span></button>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid py-4">
+  <h1 class="h3 fw-bold mb-4">Cropped</h1>
+  <div id="grid" class="row g-3"><div class="col text-secondary small">Carregando...</div></div>
+</div>
+
+<div class="modal fade" id="modalProduto" tabindex="-1">
+  <div class="modal-dialog modal-lg"><div class="modal-content">
+    <div class="modal-header border-0 pb-0">
+      <h5 class="modal-title fw-bold" id="modalNome"></h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-3 text-center"></div>
+        <div class="col-md-9">
+          <p class="text-secondary small mb-1" id="modalCat"></p>
+          <h4 class="fw-bold mb-1 text-primary" id="modalPreco"></h4>
+          <p class="text-secondary small mb-3" id="modalDesc"></p>
+          <p class="form-label mb-1">TAMANHO</p>
+          <div id="sizePills" class="d-flex flex-wrap gap-2 mb-3"></div>
+          <p class="form-label mb-1">COR</p>
+          <div id="colorPills" class="d-flex flex-wrap gap-2 mb-2"></div>
+          <p class="small mb-0" id="modalHint"></p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <input type="number" id="modalQty" class="form-control" value="1" min="1" style="width:80px">
+      <button class="btn btn-primary flex-grow-1" id="btnAdd" disabled>ADICIONAR À SACOLA</button>
+    </div>
+  </div></div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSacola">
+  <div class="offcanvas-header"><h5 class="offcanvas-title fw-bold">SACOLA</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column p-0">
+    <div id="saco-lista" class="flex-grow-1 p-3 overflow-auto"></div>
+    <div class="p-3 border-top">
+      <div class="d-flex justify-content-between mb-3">
+        <span class="text-secondary small">TOTAL</span>
+        <strong id="saco-total" class="text-primary"></strong>
+      </div>
+      <a href="/checkout" class="btn btn-primary w-100">FINALIZAR PEDIDO</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/loja.js"></script>
+<script>
+const FILTRO = 'cropped';
+let prods = [], inv = [], selProd = null, selTam = null, selCor = null;
+
+window.addEventListener('load', async () => {
+  atualizarBadgeCarrinho();
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(a => {
+    if (location.pathname.startsWith(a.getAttribute('href'))) a.classList.add('active');
+  });
+  if (token()) {
+    document.getElementById('nav-perfil').classList.remove('d-none');
+    document.getElementById('nav-entrar').classList.add('d-none');
+    inv = await req('GET', '/inventory').catch(() => []);
+  }
+  await carregarProdutos();
+});
+
+async function carregarProdutos() {
+  const grid = document.getElementById('grid');
+  try {
+    prods = await req('GET', '/products?active=true&category=' + FILTRO);
+    if (!prods.length) { grid.innerHTML = '<div class="col text-secondary">Nenhuma peça disponível.</div>'; return; }
+    grid.innerHTML = prods.map(p => {
+      const sem = p.totalAvailable === 0;
+      return '<div class="col-6 col-md-4 col-lg-3"><div class="card h-100" style="cursor:pointer" onclick="abrirProduto(' + p.id + ')">'
+        + '<div class="position-relative" style="height:600px;overflow:hidden;background:#f4f4f4">'
+        + '<img src="/img/produtos/' + p.id + '.jpg" alt="" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;object-position:top" onerror="this.style.display=String.fromCharCode(110,111,110,101)">'
+        + (sem ? '<span class="badge bg-secondary position-absolute top-0 start-0 m-2">ESGOTADO</span>' : '') + '</div>'
+        + '<div class="card-body d-flex flex-column"><h6 class="card-title fw-bold">' + p.name + '</h6>'
+        + '<p class="card-text small text-secondary flex-grow-1">' + (p.description || '') + '</p>'
+        + '<div class="d-flex justify-content-between align-items-center mt-2">'
+        + '<strong class="text-primary">R$ ' + p.price.toFixed(2) + '</strong>'
+        + '<button class="btn btn-sm btn-outline-primary"' + (sem ? ' disabled' : '') + ' onclick="event.stopPropagation();abrirProduto(' + p.id + ')">' + (sem ? 'Esgotado' : 'Escolher') + '</button>'
+        + '</div></div></div></div>';
+    }).join('');
+  } catch(e) { grid.innerHTML = '<div class="col text-danger">Erro: ' + e.message + '</div>'; }
+}
+
+async function abrirProduto(id) {
+  selProd = prods.find(p => p.id === id); if (!selProd) return;
+  selTam = null; selCor = null;
+  document.getElementById('modalNome').textContent  = selProd.name;
+  document.getElementById('modalCat').textContent   = FILTRO.toUpperCase();
+  document.getElementById('modalPreco').textContent = 'R$ ' + selProd.price.toFixed(2);
+  document.getElementById('modalDesc').textContent  = selProd.description || '';
+  document.getElementById('modalHint').textContent  = '';
+  document.getElementById('btnAdd').disabled = true;
+  let itens = inv.filter(i => i.productId === id);
+  if (!itens.length) {
+    try { const d = await req('GET', '/products/' + id); itens = (d.itens||[]).map(i => Object.assign({},i,{productId:id})); inv = inv.concat(itens); } catch {}
+  }
+  document.getElementById('sizePills').innerHTML = [...new Set(itens.map(i=>i.size))].map(function(t){ return '<span class="badge pill-btn bg-secondary border border-secondary px-3 py-2" onclick="selSize(this,\'' + t + '\')">' + t + '</span>'; }).join('');
+  document.getElementById('colorPills').innerHTML = [...new Set(itens.map(i=>i.color))].map(function(c){ return '<span class="badge pill-btn bg-secondary border border-secondary px-3 py-2" onclick="selColor(this,\'' + c + '\')">' + c + '</span>'; }).join('');
+  new bootstrap.Modal(document.getElementById('modalProduto')).show();
+}
+
+function selSize(el, t) { selTam=t; document.querySelectorAll('#sizePills .pill-btn').forEach(p=>p.classList.remove('active')); el.classList.add('active'); checarVariante(); }
+function selColor(el, c) { selCor=c; document.querySelectorAll('#colorPills .pill-btn').forEach(p=>p.classList.remove('active')); el.classList.add('active'); checarVariante(); }
+
+function checarVariante() {
+  const hint = document.getElementById('modalHint');
+  const btn  = document.getElementById('btnAdd');
+  if (!selTam || !selCor) { hint.textContent=''; btn.disabled=true; return; }
+  if (!token()) { hint.className='small text-warning'; hint.textContent='Faça login para comprar.'; btn.textContent='ENTRAR PARA COMPRAR'; btn.disabled=false; btn.onclick=()=>location.href='/account/cliente?next='+encodeURIComponent(location.pathname); return; }
+  btn.textContent='ADICIONAR À SACOLA'; btn.onclick=addCarrinho;
+  const it = inv.find(i=>i.productId===selProd.id&&i.size===selTam&&i.color===selCor);
+  if (!it||it.qtyAvailable===0) { hint.className='small text-danger'; hint.textContent='Combinação esgotada.'; btn.disabled=true; }
+  else { hint.className='small text-'+(it.qtyAvailable<=3?'warning':'success'); hint.textContent=it.qtyAvailable+' disponíveis'; btn.disabled=false; }
+}
+
+function addCarrinho() {
+  const it = inv.find(i=>i.productId===selProd.id&&i.size===selTam&&i.color===selCor);
+  if (!it) { toast('Selecione tamanho e cor.','danger'); return; }
+  const qty = parseInt(document.getElementById('modalQty').value)||1;
+  const ex = cart.find(c=>c.invId===it.id);
+  if (ex) ex.qty+=qty; else cart.push({invId:it.id,nome:selProd.name,size:selTam,color:selCor,preco:selProd.price,qty});
+  salvarCarrinho(); atualizarBadgeCarrinho();
+  bootstrap.Modal.getInstance(document.getElementById('modalProduto')).hide();
+  toast(selProd.name+' adicionado!');
+}
+
+function abrirSacola() {
+  const lista = document.getElementById('saco-lista');
+  lista.innerHTML = cart.length ? cart.map(i=>'<div class="d-flex justify-content-between align-items-center border-bottom py-2"><div><p class="mb-0 fw-semibold small">'+i.nome+'</p><p class="mb-0 text-secondary" style="font-size:.75rem">'+i.size+' · '+i.color+' · Qtd '+i.qty+'</p></div><span class="text-primary fw-bold small">R$ '+(i.preco*i.qty).toFixed(2)+'</span></div>').join('') : '<p class="text-secondary text-center py-4">Sacola vazia.</p>';
+  document.getElementById('saco-total').textContent='R$ '+cart.reduce((s,i)=>s+i.preco*i.qty,0).toFixed(2);
+  new bootstrap.Offcanvas(document.getElementById('offcanvasSacola')).show();
+}
+</script>
+</body>
+</html>

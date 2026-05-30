@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DRESS &amp; GO</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/loja.css">
+<style>
+.hero-section {
+  background: #0d0d0d;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #272727;
+  overflow: hidden;
+  position: relative;
+}
+.hero-brand-bg {
+  position: absolute;
+  right: 0; bottom: 0;
+  font-size: clamp(80px, 12vw, 160px);
+  font-weight: 900;
+  letter-spacing: -.02em;
+  line-height: .85;
+  text-align: right;
+  pointer-events: none;
+  user-select: none;
+}
+.hero-brand-bg .line1 { color: transparent; -webkit-text-stroke: 1px rgba(240,236,230,.08); }
+.hero-brand-bg .line2 { color: #ff4a14; opacity: .45; }
+.hero-eyebrow { font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; color: #ff4a14; margin-bottom: 1rem; }
+.hero-title { font-size: clamp(3rem, 8vw, 6rem); font-weight: 900; line-height: 1; letter-spacing: -.02em; margin-bottom: 1.5rem; }
+.filter-btn { font-size: .7rem; letter-spacing: .15em; text-transform: uppercase; }
+.filter-btn.active { background: #ff4a14 !important; border-color: #ff4a14 !important; color: #000 !important; }
+.product-card { cursor: pointer; transition: transform .15s, border-color .15s; }
+.product-card:hover { transform: translateY(-2px); border-color: #ff4a14 !important; }
+.product-thumb { background: #1c1c1c; min-height: 300px; display: flex; align-items: center; justify-content: center; }
+.pill-size, .pill-color {
+  padding: .35rem .8rem; font-size: .75rem; cursor: pointer;
+  border: 1px solid #353535; background: #1c1c1c; color: #aaa;
+  border-radius: 2px; transition: all .15s; user-select: none;
+}
+.pill-size.sel, .pill-color.sel { background: #ff4a14; border-color: #ff4a14; color: #000; }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top border-bottom border-secondary px-3">
+  <a class="navbar-brand fw-bold" href="/">DRESS<em class="text-primary">&</em>GO</a>
+  <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="mainNav">
+    <ul class="navbar-nav me-auto">
+    </ul>
+    <div class="d-flex align-items-center gap-2 flex-wrap">
+      <div class="d-flex gap-1 me-2" id="nav-cats">
+        <button class="btn btn-sm nav-cat-btn" data-c="camiseta" onclick="filtrar('camiseta')">Camisas</button>
+        <button class="btn btn-sm nav-cat-btn" data-c="calca" onclick="filtrar('calca')">Calças</button>
+        <button class="btn btn-sm nav-cat-btn" data-c="blusa" onclick="filtrar('blusa')">Blusas</button>
+        <button class="btn btn-sm nav-cat-btn" data-c="cropped" onclick="filtrar('cropped')">Cropped</button>
+        <button class="btn btn-sm nav-cat-btn" data-c="short" onclick="filtrar('short')">Shorts</button>
+      </div>
+      <a id="btnLogin" href="/account/cliente" class="btn btn-outline-primary btn-sm">Entrar</a>
+      <div id="user-avatar-wrap" class="dropdown" style="display:none">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+          <span id="avatar-initials"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><p class="dropdown-item-text small fw-bold mb-0" id="menu-user-name"></p></li>
+          <li><p class="dropdown-item-text small text-secondary mt-0" id="menu-user-role"></p></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="/perfil">Meu Perfil</a></li>
+          <li><a class="dropdown-item" href="/pedidos">Meus Pedidos</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><button class="dropdown-item text-danger" onclick="doLogout()">Sair</button></li>
+        </ul>
+      </div>
+      <button class="btn btn-primary btn-sm position-relative" onclick="toggleCart()">
+        Sacola
+        <span id="cn" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-dark" style="font-size:.6rem">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+<div id="acc-bar" class="d-none border-bottom py-2 px-3 d-flex justify-content-end gap-3" style="background:#1a1a1a;border-color:#ff4a14!important">
+  <a href="/perfil" class="text-white small text-decoration-none fw-semibold">MEU PERFIL</a>
+  <a href="/pedidos" class="text-white small text-decoration-none fw-semibold">MEUS PEDIDOS</a>
+  <button onclick="doLogout()" class="btn btn-link btn-sm text-secondary p-0 small">SAIR</button>
+</div>
+<section class="hero-section">
+  <div class="container position-relative z-1">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <p class="hero-eyebrow">Coleção 2026</p>
+        <h1 class="hero-title text-white">VISTA A<br><span class="text-primary">RUA.</span></h1>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="/camisa" class="btn btn-primary px-4">VER COLEÇÃO</a>
+          <a href="/cadastro" class="btn btn-outline-light px-4">CRIAR CONTA</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-brand-bg pe-4 pb-2">
+    <div class="line1">DRESS</div>
+    <div class="line2">&amp;GO</div>
+  </div>
+</section>
+
+<div class="container-fluid py-5">
+  <div class="mb-4">
+    <h2 class="fw-bold mb-0">Conheça nossos produtos</h2>
+  </div>
+  <div class="d-flex justify-content-end mb-3">
+    <span id="gcount" class="text-secondary small"></span>
+  </div>
+  <div id="pgrid" class="row g-3">
+    <div class="col text-secondary small">Carregando...</div>
+  </div>
+</div>
+
+<footer class="border-top mt-4 py-5" style="background:#f8f8f8">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-3" style="color:#111">SOBRE <span class="text-primary">NÓS</span></h5>
+        <p class="small mb-1" style="color:#555">STREETWEAR DRESS &amp; GO.</p>
+        <p class="small" style="color:#555;" style="line-height:1.8">Projeto universitário da Universidade Nove de Julho desenvolvido com o objetivo de demonstrar o funcionamento de uma loja virtual de roupas streetwear.</p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-3" style="color:#111">CON<span class="text-primary">TATO</span></h5>
+        <p class="mb-2"><a href="mailto:uninove@dressandgo.com.br" class="text-primary text-decoration-none small">uninove@dressandgo.com.br</a></p>
+        <p><a href="https://wa.me/5511999999999" target="_blank" class="text-primary text-decoration-none small d-flex align-items-center gap-2">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          (11) 99999-9999
+        </a></p>
+      </div>
+      <div class="col-md-4">
+        <h5 class="fw-bold mb-3" style="color:#111">REDES <span class="text-primary">SOCIAIS</span></h5>
+        <div class="d-flex flex-column gap-2">
+          <a href="https://instagram.com/dressandgo" target="_blank" class="text-decoration-none small d-flex" style="color:#555" align-items-center gap-2 hover-primary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            @dressandgo
+          </a>
+          <a href="https://twitter.com/uni9dressandgo" target="_blank" class="text-decoration-none small d-flex" style="color:#555" align-items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+            @uni9dressandgo
+          </a>
+          <a href="https://facebook.com/uni9dressandgo" target="_blank" class="text-decoration-none small d-flex" style="color:#555" align-items-center gap-2">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+            uni9dressandgo
+          </a>
+        </div>
+      </div>
+    </div>
+    <hr style="border-color:#ddd" class="mt-4">
+    <p class="small text-center mb-0" style="color:#888">© 2026 DRESS &amp; GO</p>
+  </div>
+</footer>
+
+<div class="modal fade" id="modalProduto" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title fw-bold" id="mp-n"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3">
+          <div class="col-md-3 text-center">
+          </div>
+          <div class="col-md-9">
+            <p class="small text-secondary mb-1" id="mp-cat"></p>
+            <p class="h4 fw-bold text-primary mb-1" id="mp-price"></p>
+            <p class="small text-secondary mb-3" id="mp-desc"></p>
+            <p class="form-label mb-2">TAMANHO</p>
+            <div id="spills" class="d-flex flex-wrap gap-2 mb-3"></div>
+            <p class="form-label mb-2">COR</p>
+            <div id="cpills" class="d-flex flex-wrap gap-2 mb-2"></div>
+            <p class="small mt-2 mb-0" id="shint"></p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-secondary">
+        <input type="number" id="mqty" class="form-control" value="1" min="1" style="width:80px">
+        <button class="btn btn-primary flex-grow-1" id="btn-ac" disabled>ADICIONAR À SACOLA</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="cdraw">
+  <div class="offcanvas-header border-bottom border-secondary">
+    <h5 class="offcanvas-title fw-bold">SACOLA</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column p-0">
+    <div id="cbody" class="flex-grow-1 p-3 overflow-auto"></div>
+    <div class="p-3 border-top border-secondary">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <span class="small text-secondary text-uppercase">Total</span>
+        <strong class="text-primary h5 mb-0" id="ctval">R$ 0,00</strong>
+      </div>
+      <button class="btn btn-primary w-100" id="btn-co" onclick="checkout()" disabled>FINALIZAR PEDIDO</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const API = '';
+let token='', userRole='', userName='', userId=0;
+let prods=[], inv=[], cart=[];
+let selProd=null, curSz=null, curCr=null, pendProd=null;
+let catAtual='';
+
+window.addEventListener('load', () => {
+  cart = JSON.parse(sessionStorage.getItem('dg_cart')||'[]');
+  const t = sessionStorage.getItem('dg_token');
+  if (t) {
+    token    = t;
+    userRole = sessionStorage.getItem('dg_role') || '';
+    userName = sessionStorage.getItem('dg_name') || '';
+    userId   = parseInt(sessionStorage.getItem('dg_uid') || '0');
+    applyLogin();
+  }
+  loadCatalog();
+});
+
+async function req(method, path, body=null, auth=false) {
+  const opts = {method, headers:{'Content-Type':'application/json'}};
+  if (auth && token) opts.headers['Authorization'] = 'Bearer ' + token;
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(API + path, opts);
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.erro || d.error || 'Erro ' + r.status);
+  return d;
+}
+
+async function loadCatalog() {
+  try {
+    prods = await req('GET', '/products?active=true');
+    const homeProds = [
+      ...prods.filter(p=>p.category==='camiseta').slice(0,3),
+      ...prods.filter(p=>p.category==='calca').slice(0,2)
+    ];
+    renderGrid(homeProds);
+    if (token) inv = await req('GET', '/inventory', null, true).catch(()=>[]);
+  } catch(e) {
+    document.getElementById('pgrid').innerHTML = '<div class="col text-danger small">Erro: ' + e.message + '</div>';
+  }
+}
+
+function filtrar(cat) {
+  catAtual = cat;
+  document.querySelectorAll('.nav-cat-btn').forEach(b => b.classList.toggle('active', b.dataset.c === cat));
+  const excluir = ['intima','acessorio'];
+  const lista = cat ? prods.filter(p => p.category === cat) : prods.filter(p => !excluir.includes(p.category));
+  renderGrid(lista);
+}
+
+function renderGrid(lista) {
+  const cnt = document.getElementById('gcount');
+  if (cnt) cnt.textContent = lista.length + ' peça' + (lista.length !== 1 ? 's' : '');
+  const g = document.getElementById('pgrid');
+  if (!lista.length) { g.innerHTML = '<div class="col text-secondary small">Nenhuma peça.</div>'; return; }
+  g.innerHTML = lista.map(p => {
+    const sem = p.totalAvailable === 0;
+    return '<div class="col-6 col-md-4 col-lg-3">'
+      + '<div class="card h-100 product-card border-secondary" onclick="openProd(' + p.id + ')">'
+      + '<div class="product-thumb position-relative" style="height:600px;min-height:unset">'
+      + '<img src="/img/produtos/' + p.id + '.jpg" alt="" class="w-100 h-100 object-fit-cover position-absolute top-0 start-0" style="object-position:top" onerror="this.style.display=\'none\'">'
+      + (sem ? '<span class="badge bg-secondary position-absolute top-0 start-0 m-2">ESGOTADO</span>' : '')
+      + '</div>'
+      + '<div class="card-body d-flex flex-column">'
+      + '<p class="card-title fw-bold mb-1 small">' + p.name + '</p>'
+      + '<p class="card-text text-secondary flex-grow-1" style="font-size:.75rem">' + (p.description || '') + '</p>'
+      + '<div class="d-flex justify-content-between align-items-center mt-2">'
+      + '<strong class="text-primary">R$ ' + p.price.toFixed(2) + '</strong>'
+      + '<button class="btn btn-sm btn-outline-primary"' + (sem ? ' disabled' : '') + ' onclick="event.stopPropagation();openProd(' + p.id + ')">' + (sem ? 'Esgotado' : 'Escolher') + '</button>'
+      + '</div></div></div></div>';
+  }).join('');
+}
+
+function openProd(id) {
+  const p = prods.find(x => x.id === id); if (!p) return;
+  selProd = p; curSz = null; curCr = null;
+  document.getElementById('mp-n').textContent     = p.name.toUpperCase();
+  document.getElementById('mp-cat').textContent   = catLbl(p.category).toUpperCase();
+  document.getElementById('mp-price').textContent = 'R$ ' + p.price.toFixed(2);
+  document.getElementById('mp-desc').textContent  = p.description || '';
+  document.getElementById('mqty').value = 1;
+  document.getElementById('shint').textContent = '';
+  const btn = document.getElementById('btn-ac');
+  btn.disabled = true; btn.textContent = 'ADICIONAR À SACOLA'; btn.onclick = () => addCart();
+
+  const carregarVariantes = async () => {
+    if (!inv.find(i => i.productId === id)) {
+      try {
+        const det = await req('GET', '/products/' + id);
+        inv = [...inv, ...(det.itens || []).map(i => ({...i, productId: id, price: p.price}))];
+      } catch {}
+    }
+    const its  = inv.filter(i => i.productId === id);
+    const szs  = [...new Set(its.map(i => i.size))];
+    const cols = [...new Set(its.map(i => i.color))];
+    document.getElementById('spills').innerHTML = szs.map(s =>
+      '<span class="pill-size" onclick="selSz(\'' + s + '\')" data-s="' + s + '">' + s + '</span>'
+    ).join('');
+    document.getElementById('cpills').innerHTML = cols.map(c =>
+      '<span class="pill-color" onclick="selCl(\'' + c + '\')" data-c="' + c + '">' + c + '</span>'
+    ).join('');
+  };
+
+  new bootstrap.Modal(document.getElementById('modalProduto')).show();
+  carregarVariantes();
+}
+
+function selSz(s) { curSz = s; document.querySelectorAll('#spills .pill-size').forEach(p => p.classList.toggle('sel', p.dataset.s === s)); updVar(); }
+function selCl(c) { curCr = c; document.querySelectorAll('#cpills .pill-color').forEach(p => p.classList.toggle('sel', p.dataset.c === c)); updVar(); }
+
+function updVar() {
+  const hint = document.getElementById('shint');
+  const btn  = document.getElementById('btn-ac');
+  if (!curSz || !curCr) { hint.textContent = ''; btn.disabled = true; return; }
+  if (!token) {
+    hint.textContent = 'Faça login para comprar.';
+    hint.className = 'small text-warning';
+    btn.disabled = false; btn.textContent = 'ENTRAR PARA COMPRAR';
+    btn.onclick = () => { pendProd = selProd; bootstrap.Modal.getInstance(document.getElementById('modalProduto')).hide(); location.href = '/account/cliente?next=/'; };
+    return;
+  }
+  btn.textContent = 'ADICIONAR À SACOLA'; btn.onclick = () => addCart();
+  const it = inv.find(i => i.productId === selProd.id && i.size === curSz && i.color === curCr);
+  if (!it || it.qtyAvailable === 0) {
+    hint.textContent = 'Combinação esgotada.'; hint.className = 'small text-danger'; btn.disabled = true;
+  } else {
+    hint.textContent = it.qtyAvailable + ' disponíveis';
+    hint.className   = 'small text-' + (it.qtyAvailable <= 3 ? 'warning' : 'success');
+    btn.disabled     = false;
+  }
+}
+
+function addCart() {
+  if (!token) { location.href = '/account/cliente?next=/'; return; }
+  const it = inv.find(i => i.productId === selProd.id && i.size === curSz && i.color === curCr);
+  if (!it || it.qtyAvailable === 0) return;
+  const qty = parseInt(document.getElementById('mqty').value) || 1;
+  if (qty > it.qtyAvailable) { showToast('Apenas ' + it.qtyAvailable + ' em estoque.', 'danger'); return; }
+  const ex = cart.find(c => c.invId === it.id);
+  if (ex) ex.qty += qty;
+  else cart.push({invId: it.id, nome: selProd.name, size: curSz, color: curCr, preco: selProd.price, qty});
+  sessionStorage.setItem('dg_cart', JSON.stringify(cart));
+  bootstrap.Modal.getInstance(document.getElementById('modalProduto')).hide();
+  renderCart();
+  showToast(selProd.name + ' adicionado!');
+}
+
+function renderCart() {
+  const total = cart.reduce((s,i) => s + i.preco * i.qty, 0);
+  const count = cart.reduce((s,i) => s + i.qty, 0);
+  document.getElementById('cn').textContent    = count;
+  document.getElementById('ctval').textContent = 'R$ ' + total.toFixed(2);
+  document.getElementById('btn-co').disabled   = !cart.length;
+  const b = document.getElementById('cbody');
+  if (!cart.length) { b.innerHTML = '<p class="text-secondary text-center py-4 small">Sacola vazia.</p>'; return; }
+  b.innerHTML = cart.map((c,i) =>
+    '<div class="d-flex justify-content-between align-items-start border-bottom border-secondary py-2">'
+    + '<div><p class="mb-0 fw-semibold small">' + c.nome + '</p>'
+    + '<p class="mb-0 text-secondary" style="font-size:.72rem">' + c.size + ' · ' + c.color + ' · Qtd ' + c.qty + '</p>'
+    + '<button class="btn btn-link btn-sm p-0 text-danger" onclick="rmCart(' + i + ')" style="font-size:.7rem">remover</button></div>'
+    + '<span class="text-primary fw-bold small">R$ ' + (c.preco * c.qty).toFixed(2) + '</span>'
+    + '</div>'
+  ).join('');
+}
+
+function rmCart(i) { cart.splice(i, 1); sessionStorage.setItem('dg_cart', JSON.stringify(cart)); renderCart(); }
+
+function toggleCart() {
+  new bootstrap.Offcanvas(document.getElementById('cdraw')).show();
+  renderCart();
+}
+
+function checkout() {
+  if (!token) { location.href = '/account/cliente?next=/checkout'; return; }
+  sessionStorage.setItem('dg_cart', JSON.stringify(cart));
+  location.href = '/checkout';
+}
+
+function applyLogin() {
+  document.getElementById('btnLogin').style.display = 'none';
+  document.getElementById('user-avatar-wrap').style.display = '';
+  const parts = userName.trim().split(' ');
+  document.getElementById('avatar-initials').textContent = (parts[0][0] + (parts[1] ? parts[1][0] : '')).toUpperCase();
+  document.getElementById('menu-user-name').textContent  = userName;
+  const labels = {manager:'Gerente', stockist:'Estoquista', customer:'Cliente'};
+  document.getElementById('menu-user-role').textContent = labels[userRole] || userRole;
+  const bar = document.getElementById('acc-bar');
+  if (bar) bar.classList.remove('d-none');
+}
+
+function doLogout() {
+  token=''; userRole=''; userName=''; userId=0; cart=[]; inv=[];
+  ['dg_token','dg_role','dg_name','dg_uid','dg_cart'].forEach(k => sessionStorage.removeItem(k));
+  document.getElementById('btnLogin').style.display = '';
+  document.getElementById('user-avatar-wrap').style.display = 'none';
+  document.getElementById('acc-bar').classList.add('d-none');
+  sessionStorage.setItem('dg_cart','[]');
+  renderCart();
+  location.reload();
+}
+
+function showToast(msg, type='success') {
+  const c = document.createElement('div');
+  c.className = 'toast align-items-center text-white border-0 show bg-' + (type==='success' ? 'primary' : type);
+  c.setAttribute('role','alert');
+  c.innerHTML = '<div class="d-flex"><div class="toast-body small">' + msg + '</div><button type="button" class="btn-close btn-close-white me-2 m-auto" onclick="this.closest(\'.toast\').remove()"></button></div>';
+  let tc = document.getElementById('toast-container');
+  if (!tc) { tc = document.createElement('div'); tc.id='toast-container'; tc.className='position-fixed bottom-0 end-0 p-3'; tc.style.zIndex=1100; document.body.appendChild(tc); }
+  tc.appendChild(c);
+  setTimeout(() => c.remove(), 3500);
+}
+
+function catLbl(c) { return {camiseta:'Camiseta',calca:'Calça',blusa:'Blusa',cropped:'Cropped',short:'Short',meia:'Meia',intima:'Íntima',acessorio:'Acessório'}[c] || c; }
+</script>
+</body>
+</html>

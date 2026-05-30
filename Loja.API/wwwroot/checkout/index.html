@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRESS &amp; GO — Checkout</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/loja.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary px-3">
+  <a class="navbar-brand fw-bold" href="/">DRESS<em class="text-primary">&</em>GO</a>
+  <a href="/" class="btn btn-outline-secondary btn-sm">← Continuar comprando</a>
+</nav>
+
+<div id="success-screen" class="container py-5 text-center" style="display:none;max-width:600px">
+  <div class="display-1 mb-3">✅</div>
+  <h2 class="fw-bold mb-2 success-title">PEDIDO CONFIRMADO</h2>
+  <p id="success-msg" class="text-secondary mb-4">Pedido realizado com sucesso.</p>
+  <div id="pix-fields" class="card mb-4 text-start" style="display:none!important">
+    <div class="card-body">
+      <p class="form-label mb-2">CHAVE PIX</p>
+      <p id="pix-key" class="fw-semibold mb-1" style="word-break:break-all;font-family:monospace"></p>
+      <p class="small text-secondary mb-1">Valor: <span id="pix-valor" class="text-primary fw-bold"></span></p>
+      <p class="small text-secondary mb-1">Abra o app do banco, acesse PIX e cole a chave.</p>
+      <p id="pix-timer" class="small text-success mb-0"></p>
+    </div>
+  </div>
+  <div id="boleto-fields" class="card mb-4 text-start" style="display:none!important">
+    <div class="card-body">
+      <p class="form-label mb-2">BOLETO BANCÁRIO</p>
+      <p class="mb-1">Seu boleto vai ser gerado em alguns minutos. Por favor, aguarde.</p>
+      <p class="small text-secondary mb-0">Enviado ao seu e-mail em até 5 minutos.</p>
+    </div>
+  </div>
+  <a href="/" class="btn btn-primary px-5">CONTINUAR COMPRANDO</a>
+</div>
+
+<div id="checkout-main" class="container py-4" style="max-width:900px">
+  <h2 class="fw-bold mb-4">FINALIZAR PEDIDO</h2>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h6 class="fw-bold mb-3">Endereço de entrega</h6>
+          <div id="addr-list"><p class="text-secondary small">Carregando endereços...</p></div>
+          <button class="btn btn-sm btn-outline-secondary mt-2" onclick="toggleAddrForm()">+ Novo endereço</button>
+          <div id="addr-form" class="mt-3" style="display:none">
+            <div class="row g-2">
+              <div class="col-12"><label class="form-label">CEP</label><input type="text" id="a-cep" class="form-control form-control-sm" placeholder="00000-000" maxlength="9" oninput="mskCep(this)" autocomplete="off"></div>
+              <div class="col-12"><label class="form-label">Rua</label><input type="text" id="a-rua" class="form-control form-control-sm" autocomplete="off"></div>
+              <div class="col-5"><label class="form-label">Número</label><input type="text" id="a-num" class="form-control form-control-sm" autocomplete="off"></div>
+              <div class="col-7"><label class="form-label">Complemento</label><input type="text" id="a-comp" class="form-control form-control-sm" autocomplete="off"></div>
+              <div class="col-6"><label class="form-label">Bairro</label><input type="text" id="a-bairro" class="form-control form-control-sm" autocomplete="off"></div>
+              <div class="col-6"><label class="form-label">Cidade</label><input type="text" id="a-cidade" class="form-control form-control-sm" autocomplete="off"></div>
+              <div class="col-4"><label class="form-label">Estado</label><input type="text" id="a-estado" class="form-control form-control-sm" maxlength="2" autocomplete="off"></div>
+              <div class="col-12"><button class="btn btn-primary btn-sm w-100" onclick="salvarEndereco()">Salvar endereço</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h6 class="fw-bold mb-3">Forma de pagamento</h6>
+          <div class="row g-2 mb-3">
+            <div class="col-6 col-md-3">
+              <div class="card border-secondary pay-opt h-100" id="lbl-pix" onclick="selecionarPag('pix',this)" style="cursor:pointer">
+                <div class="card-body text-center p-2">
+                  <div class="mb-1">💠</div><p class="small fw-bold mb-0">PIX</p><p class="small text-secondary mb-0" style="font-size:.65rem">Imediato</p>
+                  <input type="radio" name="pay" value="pix" class="d-none" checked>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card border-secondary pay-opt h-100" id="lbl-credit_card" onclick="selecionarPag('credit_card',this)" style="cursor:pointer">
+                <div class="card-body text-center p-2">
+                  <div class="mb-1">💳</div><p class="small fw-bold mb-0">Crédito</p><p class="small text-secondary mb-0" style="font-size:.65rem">Parcelado</p>
+                  <input type="radio" name="pay" value="credit_card" class="d-none">
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card border-secondary pay-opt h-100" id="lbl-debit_card" onclick="selecionarPag('debit_card',this)" style="cursor:pointer">
+                <div class="card-body text-center p-2">
+                  <div class="mb-1">💳</div><p class="small fw-bold mb-0">Débito</p><p class="small text-secondary mb-0" style="font-size:.65rem">À vista</p>
+                  <input type="radio" name="pay" value="debit_card" class="d-none">
+                </div>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="card border-secondary pay-opt h-100" id="lbl-boleto" onclick="selecionarPag('boleto',this)" style="cursor:pointer">
+                <div class="card-body text-center p-2">
+                  <div class="mb-1">🏦</div><p class="small fw-bold mb-0">Boleto</p><p class="small text-secondary mb-0" style="font-size:.65rem">3 dias úteis</p>
+                  <input type="radio" name="pay" value="boleto" class="d-none">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="card-fields" style="display:none">
+            <div class="row g-2">
+              <div class="col-12"><label class="form-label">Número do cartão</label><input type="text" id="card-num" class="form-control form-control-sm" placeholder="0000 0000 0000 0000" maxlength="19" oninput="mskCard(this)" autocomplete="off"></div>
+              <div class="col-12"><label class="form-label">Nome no cartão</label><input type="text" id="card-nome" class="form-control form-control-sm" placeholder="NOME SOBRENOME" oninput="this.value=this.value.toUpperCase()" autocomplete="off"></div>
+              <div class="col-6"><label class="form-label">Validade</label><input type="text" id="card-val" class="form-control form-control-sm" placeholder="MM/AA" maxlength="5" oninput="mskVal(this)" autocomplete="off"></div>
+              <div class="col-6"><label class="form-label">CVV</label><input type="text" id="card-cvv" class="form-control form-control-sm" placeholder="000" maxlength="4" autocomplete="off"></div>
+            </div>
+            <div id="parcelas-row" class="mt-2" style="display:none">
+              <label class="form-label">Parcelas</label>
+              <select id="parcelas" class="form-select form-select-sm"></select>
+            </div>
+          </div>
+          <div id="err" class="text-danger small mt-2" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card sticky-top" style="top:80px">
+        <div class="card-body">
+          <h6 class="fw-bold mb-3">Resumo do pedido</h6>
+          <div id="order-summary"></div>
+          <hr class="border-secondary">
+          <div class="d-flex justify-content-between mb-3">
+            <span class="text-secondary small">TOTAL</span>
+            <strong class="text-primary h5 mb-0" id="order-total">R$ 0,00</strong>
+          </div>
+          <button class="btn btn-primary w-100" onclick="confirmar()">CONFIRMAR PAGAMENTO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const token  = sessionStorage.getItem('dg_token') || '';
+const uid    = parseInt(sessionStorage.getItem('dg_uid') || '0');
+let cart     = JSON.parse(sessionStorage.getItem('dg_cart') || '[]');
+let enderecos = [];
+
+if (!token) location.href = '/account/cliente?next=/checkout';
+
+async function req(method, path, body) {
+  const r = await fetch(path, {
+    method, headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.erro || d.error || 'Erro '+r.status);
+  return d;
+}
+
+window.addEventListener('load', async () => {
+  renderSummary();
+  try {
+    enderecos = await req('GET', '/users/'+uid+'/addresses');
+    renderEnderecos();
+    renderParcelas();
+  } catch(e) { document.getElementById('addr-list').innerHTML = '<p class="text-danger small">'+e.message+'</p>'; }
+});
+
+function renderSummary() {
+  const el = document.getElementById('order-summary');
+  const total = cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  document.getElementById('order-total').textContent = 'R$ ' + total.toFixed(2);
+  el.innerHTML = cart.map(i =>
+    '<div class="d-flex justify-content-between align-items-start mb-2">'
+    +'<div><p class="mb-0 small fw-semibold">'+i.nome+'</p><p class="mb-0 text-secondary" style="font-size:.7rem">'+i.size+' · '+i.color+' · Qtd '+i.qty+'</p></div>'
+    +'<span class="text-primary small">R$ '+(i.preco*i.qty).toFixed(2)+'</span></div>'
+  ).join('');
+}
+
+function renderEnderecos() {
+  const el = document.getElementById('addr-list');
+  if (!enderecos.length) { el.innerHTML = '<p class="text-secondary small mb-2">Nenhum endereço. Adicione um abaixo.</p>'; return; }
+  el.innerHTML = enderecos.map((a,i) =>
+    '<div class="form-check border border-secondary rounded p-2 mb-2">'
+    +'<input class="form-check-input" type="radio" name="addr" id="addr'+a.id+'" value="'+a.id+'"'+(i===0?' checked':'')+'>'
+    +'<label class="form-check-label ms-1" for="addr'+a.id+'">'
+    +'<span class="fw-semibold small">'+a.label+'</span>'
+    +'<span class="text-secondary ms-1" style="font-size:.72rem">'+a.street+', '+a.number+' — '+a.city+'/'+a.state+'</span></label></div>'
+  ).join('');
+}
+
+function renderParcelas() {
+  const sel = document.getElementById('parcelas');
+  const total = cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  sel.innerHTML = [1,2,3,4,5,6,12].map(n =>
+    '<option value="'+n+'">'+n+'x de R$ '+(total/n).toFixed(2)+(n===1?' (sem juros)':'')+' </option>'
+  ).join('');
+}
+
+function selecionarPag(v, el) {
+  document.querySelectorAll('.pay-opt').forEach(p => p.classList.remove('border-primary'));
+  el.classList.add('border-primary');
+  document.querySelectorAll('input[name=pay]').forEach(r => r.checked = r.value===v);
+  document.getElementById('card-fields').style.display  = (v==='credit_card'||v==='debit_card') ? 'block' : 'none';
+  document.getElementById('parcelas-row').style.display = v==='credit_card' ? 'block' : 'none';
+}
+
+function toggleAddrForm() { const f=document.getElementById('addr-form'); f.style.display=f.style.display==='none'?'block':'none'; }
+
+function mskCep(el) {
+  let v=el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5) v=v.replace(/(\d{5})(\d{0,3})/,'$1-$2');
+  el.value=v;
+  if(v.replace('-','').length===8) viaCep(v.replace('-',''));
+}
+async function viaCep(cep) {
+  try {
+    const d=await fetch('https://viacep.com.br/ws/'+cep+'/json/').then(r=>r.json());
+    if(d.erro) return;
+    const s=(id,v)=>{const e=document.getElementById(id);if(e&&v&&!e.value)e.value=v;};
+    s('a-rua',d.logradouro);s('a-bairro',d.bairro);s('a-cidade',d.localidade);s('a-estado',d.uf);
+    document.getElementById('a-num').focus();
+  } catch {}
+}
+function mskCard(el){let v=el.value.replace(/\D/g,'').slice(0,16);v=v.replace(/(\d{4})(?=\d)/g,'$1 ');el.value=v;}
+function mskVal(el){let v=el.value.replace(/\D/g,'').slice(0,4);if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);el.value=v;}
+
+async function salvarEndereco() {
+  const cep=document.getElementById('a-cep').value.replace(/\D/g,'');
+  if(cep.length!==8){mostrarErro('CEP inválido.');return;}
+  try {
+    const d=await req('POST','/users/'+uid+'/addresses',{
+      label:'Principal',cep,street:document.getElementById('a-rua').value.trim(),
+      number:document.getElementById('a-num').value.trim()||'s/n',
+      complement:document.getElementById('a-comp').value.trim()||null,
+      district:document.getElementById('a-bairro').value.trim(),
+      city:document.getElementById('a-cidade').value.trim(),state:document.getElementById('a-estado').value.trim()
+    });
+    enderecos=await req('GET','/users/'+uid+'/addresses');
+    renderEnderecos();
+    document.getElementById('addr-form').style.display='none';
+  } catch(e){mostrarErro(e.message);}
+}
+
+async function confirmar() {
+  const addrRadio = document.querySelector('input[name=addr]:checked');
+  const method    = document.querySelector('input[name=pay]:checked')?.value || 'pix';
+  const parcelas  = parseInt(document.getElementById('parcelas')?.value||'1');
+  const total     = cart.reduce((s,i)=>s+i.preco*i.qty,0);
+  const btn       = document.querySelector('[onclick="confirmar()"]');
+
+  if (!addrRadio) { mostrarErro('Selecione um endereço.'); return; }
+  if (method==='credit_card'||method==='debit_card') {
+    const num  = (document.getElementById('card-num')?.value||'').replace(/\s/g,'');
+    const nome = document.getElementById('card-nome')?.value||'';
+    const val  = document.getElementById('card-val')?.value||'';
+    const cvv  = document.getElementById('card-cvv')?.value||'';
+    if(num.length<16){mostrarErro('Número do cartão inválido.');return;}
+    if(!nome.trim()){mostrarErro('Nome no cartão obrigatório.');return;}
+    if(val.length<5){mostrarErro('Validade inválida (MM/AA).');return;}
+    if(cvv.length<3){mostrarErro('CVV inválido.');return;}
+  }
+
+  btn.disabled=true; btn.textContent='PROCESSANDO...';
+  try {
+    const items = cart.map(i=>({inventoryItemId:i.invId,quantity:i.qty}));
+    const ordem = await req('POST','/orders',{items,addressId:parseInt(addrRadio.value)});
+    await req('PATCH','/orders/'+ordem.id+'/status',{status:'reservado'});
+    await req('PATCH','/orders/'+ordem.id+'/status',{status:'aguardando'});
+    await req('POST','/payments',{orderId:ordem.id,amount:total,method,installments:parcelas});
+
+    sessionStorage.removeItem('dg_cart');
+    document.getElementById('checkout-main').style.display='none';
+    const s=document.getElementById('success-screen'); s.style.display='block';
+
+    const titulo = document.querySelector('.success-title');
+    if (method==='pix') {
+      iniciarPix(total);
+      document.getElementById('pix-fields').style.cssText='display:block!important';
+      s.appendChild(document.getElementById('pix-fields'));
+      if(titulo){titulo.textContent='AGUARDANDO PAGAMENTO';titulo.className='fw-bold mb-2 text-warning h2';}
+      document.getElementById('success-msg').textContent='Copie a chave PIX abaixo e pague pelo app do banco.';
+    } else if (method==='boleto') {
+      document.getElementById('boleto-fields').style.cssText='display:block!important';
+      s.appendChild(document.getElementById('boleto-fields'));
+      document.getElementById('success-msg').textContent='Pedido realizado com sucesso.';
+    } else {
+      document.getElementById('success-msg').textContent='Pedido realizado com sucesso.';
+    }
+  } catch(e) { btn.disabled=false; btn.textContent='CONFIRMAR PAGAMENTO'; mostrarErro(e.message); }
+}
+
+function iniciarPix(total) {
+  const chars='abcdef0123456789';
+  const p=n=>Array.from({length:n},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const chave=p(8)+'-'+p(4)+'-'+p(4)+'-'+p(4)+'-'+p(12);
+  document.getElementById('pix-key').textContent=chave;
+  document.getElementById('pix-valor').textContent='R$ '+total.toFixed(2);
+  let seg=600;
+  if(window._pix) clearInterval(window._pix);
+  window._pix=setInterval(()=>{
+    seg--;
+    const timer=document.getElementById('pix-timer');
+    if(timer){
+      const m=Math.floor(seg/60), s=seg%60;
+      timer.textContent='Expira em '+m+':'+String(s).padStart(2,'0');
+      timer.className='small mb-0 '+(seg<=60?'text-danger':'text-success');
+    }
+    if(seg<=0){clearInterval(window._pix);if(document.getElementById('pix-timer'))document.getElementById('pix-timer').textContent='PIX expirado.';}
+  },1000);
+}
+
+function mostrarErro(msg) {
+  const e=document.getElementById('err');
+  e.textContent=msg; e.style.display='block';
+  setTimeout(()=>e.style.display='none',4000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-bs-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRESS &amp; GO — Meu Perfil</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/loja.css">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark border-bottom border-secondary px-3">
+  <a class="navbar-brand fw-bold" href="/">DRESS<em class="text-primary">&</em>GO</a>
+  <div class="d-flex gap-2">
+    <a href="/pedidos" class="btn btn-outline-secondary btn-sm">Meus Pedidos</a>
+    <button class="btn btn-outline-danger btn-sm" onclick="sair()">Sair</button>
+  </div>
+</nav>
+
+<div class="container py-4" style="max-width:800px">
+  <h2 class="fw-bold mb-4">MEU PERFIL</h2>
+  <div id="conteudo"><p class="text-secondary small">Carregando...</p></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const token = sessionStorage.getItem('dg_token');
+const uid   = parseInt(sessionStorage.getItem('dg_uid')||'0');
+if (!token) location.href = '/account/cliente?next=/perfil';
+
+async function req(method, path, body) {
+  const r = await fetch(path, {
+    method, headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const d = await r.json().catch(()=>({}));
+  if (!r.ok) throw new Error(d.erro||d.error||'Erro '+r.status);
+  return d;
+}
+
+window.addEventListener('load', carregar);
+
+async function carregar() {
+  const el = document.getElementById('conteudo');
+  try {
+    const [u, ends] = await Promise.all([
+      req('GET','/users/'+uid),
+      req('GET','/users/'+uid+'/addresses')
+    ]);
+    const nome = u.nome||u.name||'';
+    el.innerHTML = `
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Dados pessoais</h6>
+            <div class="mb-3"><label class="form-label">Nome</label><input type="text" id="inp-nome" class="form-control" value="${esc(nome)}"></div>
+            <div class="mb-3"><label class="form-label">E-mail</label><input class="form-control" value="${esc(u.email||u.Email||'')}" disabled></div>
+            <div class="mb-3"><label class="form-label">Telefone</label><input type="tel" id="inp-tel" class="form-control" value="${esc(u.telefone||u.phone||'')}"></div>
+            <button class="btn btn-primary w-100" onclick="salvarDados()">Salvar dados</button>
+            <div id="msg-dados" class="mt-2" style="display:none"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Alterar senha</h6>
+            <div class="mb-2"><label class="form-label">Senha atual</label><input type="password" id="pw-atual" class="form-control" placeholder="••••••" autocomplete="off"></div>
+            <div class="mb-2"><label class="form-label">Nova senha</label><input type="password" id="pw-nova" class="form-control" placeholder="Mínimo 6 caracteres" autocomplete="off"></div>
+            <div class="mb-3"><label class="form-label">Confirmar nova senha</label><input type="password" id="pw-conf" class="form-control" placeholder="Repita a nova senha" autocomplete="off"></div>
+            <button class="btn btn-outline-primary w-100" onclick="salvarSenha()">Alterar senha</button>
+            <div id="msg-senha" class="mt-2" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h6 class="fw-bold mb-3">Endereços de entrega</h6>
+            <div id="lista-end">${renderEnds(ends)}</div>
+            <button class="btn btn-outline-secondary btn-sm w-100 mt-2" onclick="toggleFormEnd()">+ Adicionar endereço</button>
+            <div id="form-end" class="mt-3" style="display:none">
+              <div class="row g-2">
+                <div class="col-12"><label class="form-label">CEP</label><input type="text" id="e-cep" class="form-control form-control-sm" placeholder="00000-000" maxlength="9" oninput="mskCep(this)" autocomplete="off"></div>
+                <div class="col-12"><label class="form-label">Rua</label><input type="text" id="e-rua" class="form-control form-control-sm" autocomplete="off"></div>
+                <div class="col-5"><label class="form-label">Número</label><input type="text" id="e-num" class="form-control form-control-sm" autocomplete="off"></div>
+                <div class="col-7"><label class="form-label">Complemento</label><input type="text" id="e-comp" class="form-control form-control-sm" autocomplete="off"></div>
+                <div class="col-6"><label class="form-label">Bairro</label><input type="text" id="e-bairro" class="form-control form-control-sm" autocomplete="off"></div>
+                <div class="col-6"><label class="form-label">Cidade</label><input type="text" id="e-cidade" class="form-control form-control-sm" autocomplete="off"></div>
+                <div class="col-4"><label class="form-label">Estado</label><input type="text" id="e-estado" class="form-control form-control-sm" maxlength="2" autocomplete="off"></div>
+                <div class="col-12"><button class="btn btn-primary btn-sm w-100" onclick="salvarEnd()">Salvar endereço</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  } catch(e) { el.innerHTML = '<p class="text-danger small">'+e.message+'</p>'; }
+}
+
+function renderEnds(lista) {
+  if (!lista.length) return '<p class="text-secondary small">Nenhum endereço cadastrado.</p>';
+  return lista.map(a =>
+    '<div class="border border-secondary rounded p-2 mb-2 position-relative">'
+    +'<p class="small fw-bold mb-0 text-primary">'+a.label+'</p>'
+    +'<p class="small text-secondary mb-0">'+a.street+', '+a.number+(a.complement?', '+a.complement:'')+'</p>'
+    +'<p class="small text-secondary mb-0">'+a.district+' — '+a.city+'/'+a.state+' · CEP '+a.cep+'</p>'
+    +'<button class="btn btn-link btn-sm p-0 text-danger position-absolute top-0 end-0 me-2 mt-1" onclick="removerEnd('+a.id+')" style="font-size:.7rem">remover</button>'
+    +'</div>'
+  ).join('');
+}
+
+async function salvarDados() {
+  const msg = document.getElementById('msg-dados');
+  try {
+    await req('PATCH','/users/'+uid,{name:document.getElementById('inp-nome').value.trim(),phone:document.getElementById('inp-tel').value.trim()});
+    sessionStorage.setItem('dg_name', document.getElementById('inp-nome').value.trim());
+    mostrar(msg,'Dados atualizados.','success');
+  } catch(e) { mostrar(msg,e.message,'danger'); }
+}
+
+async function salvarSenha() {
+  const atual=document.getElementById('pw-atual').value;
+  const nova=document.getElementById('pw-nova').value;
+  const conf=document.getElementById('pw-conf').value;
+  const msg=document.getElementById('msg-senha');
+  if(nova.length<6){mostrar(msg,'Senha deve ter ao menos 6 caracteres.','danger');return;}
+  if(nova!==conf){mostrar(msg,'As senhas não conferem.','danger');return;}
+  try {
+    await req('POST','/users/'+uid+'/change-password',{currentPassword:atual,newPassword:nova});
+    document.getElementById('pw-atual').value='';document.getElementById('pw-nova').value='';document.getElementById('pw-conf').value='';
+    mostrar(msg,'Senha alterada.','success');
+  } catch(e) { mostrar(msg,e.message,'danger'); }
+}
+
+function toggleFormEnd(){const f=document.getElementById('form-end');f.style.display=f.style.display==='none'?'block':'none';}
+
+function mskCep(el){
+  let v=el.value.replace(/\D/g,'').slice(0,8);
+  if(v.length>5) v=v.replace(/(\d{5})(\d{0,3})/,'$1-$2');
+  el.value=v;
+  if(v.replace('-','').length===8) viaCep(v.replace('-',''));
+}
+async function viaCep(cep){
+  try{const d=await fetch('https://viacep.com.br/ws/'+cep+'/json/').then(r=>r.json());if(d.erro)return;
+    const s=(id,v)=>{const e=document.getElementById(id);if(e&&v&&!e.value)e.value=v;};
+    s('e-rua',d.logradouro);s('e-bairro',d.bairro);s('e-cidade',d.localidade);s('e-estado',d.uf);
+    document.getElementById('e-num').focus();}catch{}
+}
+
+async function salvarEnd(){
+  const cep=document.getElementById('e-cep').value.replace(/\D/g,'');
+  if(cep.length!==8){mostrar(document.getElementById('form-end'),'CEP inválido.','danger');return;}
+  try{
+    await req('POST','/users/'+uid+'/addresses',{label:'Endereço',cep,street:document.getElementById('e-rua').value.trim(),number:document.getElementById('e-num').value.trim()||'s/n',complement:document.getElementById('e-comp').value.trim()||null,district:document.getElementById('e-bairro').value.trim(),city:document.getElementById('e-cidade').value.trim(),state:document.getElementById('e-estado').value.trim()});
+    await carregar();
+  }catch(e){alert(e.message);}
+}
+
+async function removerEnd(id){
+  if(!confirm('Remover endereço?'))return;
+  try{await req('DELETE','/users/'+uid+'/addresses/'+id);await carregar();}catch(e){alert(e.message);}
+}
+
+function mostrar(el,msg,tipo){el.className='small text-'+tipo;el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000);}
+function sair(){['dg_token','dg_role','dg_name','dg_uid','dg_cart'].forEach(k=>sessionStorage.removeItem(k));location.href='/';}
+function esc(s){return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+</script>
+</body>
+</html>
