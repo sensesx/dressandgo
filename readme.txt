@@ -8,7 +8,7 @@ e se conectar com o banco de dados.
 ANTES DE RODAR O PROJETO
 
 Instalar o sdk correto: https://dotnet.microsoft.com/download/dotnet/9
-baixar sqlite x64: https://www.sqlite.org/download.html e colocar na pasta principal
+baixar sqlite x64: https://www.sqlite.org/download.html e colocar na pasta principal (se não estiver presente)
 rodar no git bash: ./run.sh
 
 http://localhost:5000
