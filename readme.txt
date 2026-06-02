@@ -1,6 +1,6 @@
-# :necktie: Dress & Go
+# Dress & Go
 
-## :busts_in_silhouette: Integrantes
+## Integrantes
 - RA: 3024103486 — Kauan Faria Nascimento  
 - RA: 3024103700 — Gustavo Venâncio Vieira da Conceição  
 - RA: 3023100946 — Vinicius Moura Cardoso  
@@ -8,7 +8,7 @@
 - RA: 3024104172 — Matheus Paulucci Ferreira  
 - RA: 3023104368 — Erick Fernando Priore Michelan  
 
-## :desktop: Linguagem e Tecnologias
+## Linguagem e Tecnologias
 - **Backend:** C# (.NET 9) com ASP.NET Core  
 - **Banco de Dados:** SQLite via P/Invoke  
 - **Autenticação:** SHA-256 com salt fixo  
@@ -17,29 +17,29 @@
 
 > O `SQLiteHelper` é um wrapper que possibilita a utilização das funções da biblioteca SQLite escrita em C diretamente no C#, além de gerenciar a conexão com o banco de dados de forma eficiente.
 
-## :dart: Objetivo
+## Objetivo
 O projeto **Dress & Go** tem como propósito fornecer uma plataforma integrada para a **gestão de produtos, pedidos e usuários**, unificando frontend e backend em um único ambiente.  
 A solução permite **catalogar produtos**, **armazenar informações** e **controlar o estoque** com praticidade e segurança.
 
-## :construction_site: Arquitetura
+## Arquitetura
 - API REST e arquivos estáticos em servidor único  
 - Estrutura modular, clara e de fácil manutenção  
 - URLs relativas, compatíveis com qualquer host  
 
-### :package: Serviços
+### Serviços
 - **AuthService** → Gerenciamento de login e tokens  
 - **UserService** → Administração de usuários e endereços  
 - **ProductService** → Controle de produtos e estoque  
 - **OrderService** → Processamento de pedidos e pagamentos  
 
-### :globe_with_meridians: Endpoints
+### Endpoints
 - **Auth:** `/auth/login`, `/auth/me`  
 - **Produtos:** `/products`, `/inventory`  
 - **Usuários:** `/users/{id}`, `/users/{id}/addresses`  
 - **Pedidos:** `/orders`, `/orders/{id}/status`  
 - **Pagamentos:** `/payments`  
 
-## :rocket: Instalação e Uso
+## Instalação e Uso
 1. Instale o [SDK .NET 9.0](https://dotnet.microsoft.com/download/dotnet/9)  
 2. Baixe o [SQLite x64](https://www.sqlite.org/download.html) e copie os arquivos para a pasta principal do projeto  
 3. No Git Bash, execute:  
