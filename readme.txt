@@ -45,6 +45,9 @@ A solução permite **catalogar produtos**, **armazenar informações** e **cont
 3. No Git Bash, execute:  
    ```bash
    ./run.sh
+
 Contas para teste:
 
-admin@dressandgo.com.br / admin123 cliente@dressandgo.com.br / cliente123 estoque@dressandgo.com.br / estoque123
+admin@dressandgo.com.br / admin123 
+cliente@dressandgo.com.br / cliente123 
+estoque@dressandgo.com.br / estoque123
